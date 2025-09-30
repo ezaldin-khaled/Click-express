@@ -45,7 +45,6 @@ const Blogs: React.FC = () => {
               title={post.title}
               content={post.content}
               hasBackgroundImage={post.hasBackgroundImage}
-              backgroundImage={post.backgroundImage}
             />
           ))}
         </div>

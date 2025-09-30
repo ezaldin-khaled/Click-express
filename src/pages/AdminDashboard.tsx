@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import GalleryManagement from '../components/admin/GalleryManagement'
 import BlogManagement from '../components/admin/BlogManagement'
 import EmailManagement from '../components/admin/EmailManagement'
 import ContactManagement from '../components/admin/ContactManagement'
 
 const AdminDashboard: React.FC = () => {
-  const location = useLocation()
   const [activeTab, setActiveTab] = useState('gallery')
 
   const tabs = [
