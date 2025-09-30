@@ -4,6 +4,7 @@ import { NavigationItem } from '../../types'
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const navigationItems: NavigationItem[] = [
     { label: 'Home', href: '#home' },
@@ -24,6 +25,14 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container">
@@ -37,8 +46,21 @@ const Header: React.FC = () => {
             />
           </div>
 
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-menu-toggle"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+
           {/* Desktop Navigation */}
-          <nav className="nav">
+          <nav className="nav desktop-nav">
             <ul className="nav-list">
               {navigationItems.map((item) => (
                 <li key={item.label}>
@@ -71,6 +93,35 @@ const Header: React.FC = () => {
             </ul>
           </nav>
         </div>
+
+        {/* Mobile Navigation */}
+        <nav className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
+          <ul className="mobile-nav-list">
+            {navigationItems.map((item) => (
+              <li key={item.label}>
+                {item.href.startsWith('#') ? (
+                  <a
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      const element = document.querySelector(item.href)
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' })
+                        closeMobileMenu()
+                      }
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link to={item.href} onClick={closeMobileMenu}>
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </header>
   )
