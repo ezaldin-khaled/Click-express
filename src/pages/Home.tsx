@@ -8,11 +8,21 @@ import Gallery from '../components/sections/Gallery'
 const Home: React.FC = () => {
   return (
     <>
-      <Hero />
-      <Services />
-      <About />
-      <ContactForm />
-      <Gallery />
+      <div id="home">
+        <Hero />
+      </div>
+      <div id="services">
+        <Services />
+      </div>
+      <div id="about">
+        <About />
+      </div>
+      <div id="contact">
+        <ContactForm />
+      </div>
+      <div id="gallery">
+        <Gallery />
+      </div>
     </>
   )
 }

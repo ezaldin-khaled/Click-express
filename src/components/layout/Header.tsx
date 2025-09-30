@@ -69,9 +69,14 @@ const Header: React.FC = () => {
                       href={item.href}
                       onClick={(e) => {
                         e.preventDefault()
-                        const element = document.querySelector(item.href)
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' })
+                        // Navigate to home page first if not already there
+                        if (window.location.pathname !== '/') {
+                          window.location.href = `/${item.href}`
+                        } else {
+                          const element = document.querySelector(item.href)
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth' })
+                          }
                         }
                       }}
                     >
@@ -104,10 +109,15 @@ const Header: React.FC = () => {
                     href={item.href}
                     onClick={(e) => {
                       e.preventDefault()
-                      const element = document.querySelector(item.href)
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' })
-                        closeMobileMenu()
+                      // Navigate to home page first if not already there
+                      if (window.location.pathname !== '/') {
+                        window.location.href = `/${item.href}`
+                      } else {
+                        const element = document.querySelector(item.href)
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' })
+                          closeMobileMenu()
+                        }
                       }
                     }}
                   >
