@@ -1104,7 +1104,7 @@ html {
 .blog-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    background: linear-gradient(135deg, rgba(238, 238, 238, 0.7) 0%, rgba(35, 77, 105, 0.7) 100%), url('/src/assets/2\ services.jpg') center center / cover no-repeat;
+    background: linear-gradient(135deg, rgba(238, 238, 238, 0.7) 0%, rgba(35, 77, 105, 0.7) 100%), url('/assets/2 services.jpg') center center / cover no-repeat;
 }
 
 .blog-card--with-bg {

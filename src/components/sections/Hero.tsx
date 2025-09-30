@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
         </div>
       </div>
       <div className="hero-background">
-        <img src="/src/assets/hero.jpg" alt="Shipping containers" className="hero-image" />
+        <img src="/assets/hero.jpg" alt="Shipping containers" className="hero-image" />
       </div>
     </section>
   )

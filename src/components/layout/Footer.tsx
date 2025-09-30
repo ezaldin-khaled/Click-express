@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
         <div className="footer-content">
           <div className="footer-section">
             <div className="footer-logo">
-              <img src="/src/assets/LOGO.png" alt="CLICK EXPRESS Logo" className="footer-logo-image" />
+              <img src="/assets/LOGO.png" alt="CLICK EXPRESS Logo" className="footer-logo-image" />
             </div>
             <div className="contact-info">
               <p><i className="fas fa-map-marker-alt"></i> Address: {contactInfo.address}</p>

@@ -11,7 +11,7 @@ const About: React.FC = () => {
             <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           </div>
           <div className="about-image">
-            <img src="/src/assets/about.jpg" alt="Logistics operations" />
+            <img src="/assets/about.jpg" alt="Logistics operations" />
           </div>
         </div>
       </div>

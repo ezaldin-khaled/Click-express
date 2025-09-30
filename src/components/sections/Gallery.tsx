@@ -9,18 +9,18 @@ const Gallery: React.FC = () => {
   const galleryImages: GalleryImage[] = [
     {
       id: '1',
-      src: '/src/assets/gallery 1.jpg',
+      src: '/assets/gallery 1.jpg',
       alt: 'Truck fleet',
       isMain: true
     },
     {
       id: '2',
-      src: '/src/assets/gallery2.png',
+      src: '/assets/gallery2.png',
       alt: 'Container yard'
     },
     {
       id: '3',
-      src: '/src/assets/gallery3.jpg',
+      src: '/assets/gallery3.jpg',
       alt: 'Port operations'
     }
   ]

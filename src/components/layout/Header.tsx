@@ -40,7 +40,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <div className="logo">
             <img 
-              src="/src/assets/LOGO.png" 
+              src="/assets/LOGO.png" 
               alt="CLICK EXPRESS Logo" 
               className="logo-image"
             />
