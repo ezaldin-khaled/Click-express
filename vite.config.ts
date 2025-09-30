@@ -18,4 +18,13 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
   },
+  preview: {
+    host: '0.0.0.0',
+    port: 8080,
+    allowedHosts: [
+      'seahorse-app-8uwo9.ondigitalocean.app',
+      'localhost',
+      '127.0.0.1'
+    ]
+  },
 })
