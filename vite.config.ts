@@ -25,6 +25,8 @@ export default defineConfig({
       'seahorse-app-8uwo9.ondigitalocean.app',
       'localhost',
       '127.0.0.1'
-    ]
+    ],
+    cors: true,
+    strictPort: true
   },
 })
