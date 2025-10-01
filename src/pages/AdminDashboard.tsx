@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import GalleryManagement from '../components/admin/GalleryManagement'
 import BlogManagement from '../components/admin/BlogManagement'
 import EmailManagement from '../components/admin/EmailManagement'
@@ -7,6 +8,7 @@ import ContactManagement from '../components/admin/ContactManagement'
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('gallery')
+  const { logout } = useAuth()
 
   const tabs = [
     { id: 'gallery', label: 'Gallery', icon: '🖼️' },
@@ -36,9 +38,14 @@ const AdminDashboard: React.FC = () => {
         <div className="container">
           <div className="admin-header-content">
             <h1>Admin Dashboard</h1>
-            <Link to="/" className="back-to-site">
-              ← Back to Site
-            </Link>
+            <div className="admin-header-actions">
+              <Link to="/" className="back-to-site">
+                ← Back to Site
+              </Link>
+              <button onClick={logout} className="logout-btn">
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
