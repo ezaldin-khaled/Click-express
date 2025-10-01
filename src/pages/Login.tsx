@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../services/api'
-// import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/AuthContext'
 
 const Login: React.FC = () => {
-  console.log('Login component is rendering')
-  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -13,11 +11,7 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
-  // const { login } = useAuth()
-  
-  const login = (token: string) => {
-    localStorage.setItem('authToken', token)
-  }
+  const { login } = useAuth()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -60,14 +54,12 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="login-page" style={{backgroundColor: 'red', minHeight: '100vh', padding: '20px'}}>
+    <div className="login-page">
       <div className="login-container">
-        <div className="login-card" style={{backgroundColor: 'white', padding: '20px', borderRadius: '10px'}}>
+        <div className="login-card">
           <div className="login-header">
-            <h1 style={{color: 'black'}}>Admin Login</h1>
-            <p style={{color: 'black'}}>Sign in to access the admin dashboard</p>
-            <p style={{color: 'red', fontSize: '12px'}}>DEBUG: Login component is rendering</p>
-            <p style={{color: 'blue', fontSize: '10px'}}>URL: {window.location.href}</p>
+            <h1>Admin Login</h1>
+            <p>Sign in to access the admin dashboard</p>
           </div>
 
           <form onSubmit={handleSubmit} className="login-form">
