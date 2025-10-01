@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   })
   const [isLoading, setIsLoading] = useState(false)
@@ -70,15 +70,15 @@ const Login: React.FC = () => {
             )}
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="username">Username</label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
-                placeholder="Enter your email"
+                placeholder="Enter your username"
                 disabled={isLoading}
               />
             </div>
