@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { authAPI } from '../services/api'
 import GalleryManagement from '../components/admin/GalleryManagement'
 import BlogManagement from '../components/admin/BlogManagement'
 import EmailManagement from '../components/admin/EmailManagement'
@@ -9,6 +10,18 @@ import ContactManagement from '../components/admin/ContactManagement'
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('gallery')
   const { logout } = useAuth()
+
+  const handleLogout = async () => {
+    try {
+      // Call logout API
+      await authAPI.logout()
+    } catch (error) {
+      console.error('Logout API error:', error)
+    } finally {
+      // Always logout locally regardless of API response
+      logout()
+    }
+  }
 
   const tabs = [
     { id: 'gallery', label: 'Gallery', icon: '🖼️' },
@@ -42,7 +55,7 @@ const AdminDashboard: React.FC = () => {
               <Link to="/" className="back-to-site">
                 ← Back to Site
               </Link>
-              <button onClick={logout} className="logout-btn">
+              <button onClick={handleLogout} className="logout-btn">
                 Logout
               </button>
             </div>

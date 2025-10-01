@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { authAPI } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 
 const Login: React.FC = () => {
@@ -28,28 +29,25 @@ const Login: React.FC = () => {
     setError('')
 
     try {
-      const response = await fetch('https://clickexpress.ae/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      })
+      const response = await authAPI.login(formData)
 
-      if (response.ok) {
-        const data = await response.json()
-        // Store auth token if provided
-        if (data.token) {
-          login(data.token)
-        }
-        // Redirect to admin dashboard
-        navigate('/admin/dashboard')
-      } else {
-        const errorData = await response.json()
-        setError(errorData.message || 'Login failed. Please check your credentials.')
+      // Store auth token if provided
+      if (response.token) {
+        login(response.token)
       }
-    } catch (err) {
-      setError('Network error. Please try again.')
+      // Redirect to admin dashboard
+      navigate('/admin/dashboard')
+    } catch (err: any) {
+      if (err.response) {
+        // Server responded with error status
+        setError(err.response.data.message || 'Login failed. Please check your credentials.')
+      } else if (err.request) {
+        // Request was made but no response received
+        setError('Network error. Please check your connection and try again.')
+      } else {
+        // Something else happened
+        setError('An unexpected error occurred. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }
