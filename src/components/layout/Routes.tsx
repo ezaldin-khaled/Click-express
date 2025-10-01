@@ -4,6 +4,7 @@ import Layout from './Layout'
 import Home from '../../pages/Home'
 import Blogs from '../../pages/Blogs'
 import Login from '../../pages/Login'
+import TestLogin from '../../pages/TestLogin'
 import AdminDashboard from '../../pages/AdminDashboard'
 import ProtectedRoute from '../ProtectedRoute'
 
