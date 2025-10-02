@@ -28,10 +28,11 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
     setIsLoading(true)
     try {
       const posts = await blogAPI.getPosts()
-      setBlogPosts(posts)
+      setBlogPosts(Array.isArray(posts) ? posts : [])
     } catch (error) {
       console.error('Error loading blog posts:', error)
       onNotification?.('error', 'Failed to load blog posts')
+      setBlogPosts([]) // Set empty array on error
     } finally {
       setIsLoading(false)
     }
@@ -50,7 +51,7 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       }
       
       const createdPost = await blogAPI.createPost(postData)
-      setBlogPosts([...blogPosts, createdPost])
+      setBlogPosts(prev => Array.isArray(prev) ? [...prev, createdPost] : [createdPost])
       setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '', published: false })
       setShowAddForm(false)
       onNotification?.('success', 'Blog post created successfully')
@@ -89,7 +90,7 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       }
       
       const updatedPost = await blogAPI.updatePost(editingPost.id, postData)
-      setBlogPosts(blogPosts.map(post => post.id === editingPost.id ? updatedPost : post))
+      setBlogPosts(prev => Array.isArray(prev) ? prev.map(post => post.id === editingPost.id ? updatedPost : post) : [updatedPost])
       setEditingPost(null)
       setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '', published: false })
       setShowAddForm(false)
@@ -108,7 +109,7 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
     setIsLoading(true)
     try {
       await blogAPI.deletePost(id)
-      setBlogPosts(blogPosts.filter(post => post.id !== id))
+      setBlogPosts(prev => Array.isArray(prev) ? prev.filter(post => post.id !== id) : [])
       onNotification?.('success', 'Blog post deleted successfully')
     } catch (error) {
       console.error('Error deleting blog post:', error)
@@ -225,7 +226,7 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
         </div>
       ) : (
         <div className="blog-posts-admin">
-          {blogPosts.map((post) => (
+          {Array.isArray(blogPosts) && blogPosts.map((post) => (
           <div key={post.id} className="blog-post-admin">
             <div className="blog-post-content">
               <h3>{post.title}</h3>

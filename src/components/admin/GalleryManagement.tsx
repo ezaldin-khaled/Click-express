@@ -25,10 +25,11 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     setIsLoading(true)
     try {
       const images = await galleryAPI.getImages()
-      setGalleryImages(images)
+      setGalleryImages(Array.isArray(images) ? images : [])
     } catch (error) {
       console.error('Error loading gallery images:', error)
       onNotification?.('error', 'Failed to load gallery images')
+      setGalleryImages([]) // Set empty array on error
     } finally {
       setIsLoading(false)
     }
@@ -45,7 +46,7 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       }
       
       const createdImage = await galleryAPI.uploadImage(imageData)
-      setGalleryImages([...galleryImages, createdImage])
+      setGalleryImages(prev => Array.isArray(prev) ? [...prev, createdImage] : [createdImage])
       setNewImage({ src: '', alt: '', isMain: false })
       setShowAddForm(false)
       onNotification?.('success', 'Image added successfully')
@@ -63,7 +64,7 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     setIsLoading(true)
     try {
       await galleryAPI.deleteImage(id)
-      setGalleryImages(galleryImages.filter(img => img.id !== id))
+      setGalleryImages(prev => Array.isArray(prev) ? prev.filter(img => img.id !== id) : [])
       onNotification?.('success', 'Image deleted successfully')
     } catch (error) {
       console.error('Error deleting image:', error)
@@ -76,24 +77,8 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
   const handleSetMain = async (id: string) => {
     setIsLoading(true)
     try {
-      // First, set all images to not main
-      const updatedImages = galleryImages.map(img => ({
-        ...img,
-        isMain: false
-      }))
-      
-      // Then set the selected image as main
-      const finalImages = updatedImages.map(img => ({
-        ...img,
-        isMain: img.id === id
-      }))
-      
-      // Update each image via API
-      for (const img of finalImages) {
-        await galleryAPI.updateImage(img.id, { isMain: img.isMain })
-      }
-      
-      setGalleryImages(finalImages)
+      await galleryAPI.setMainImage(id)
+      setGalleryImages(prev => Array.isArray(prev) ? prev.map(img => ({ ...img, isMain: img.id === id })) : [])
       onNotification?.('success', 'Main image updated successfully')
     } catch (error) {
       console.error('Error updating main image:', error)
@@ -160,7 +145,7 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
         </div>
       ) : (
         <div className="gallery-grid-admin">
-          {galleryImages.map((image) => (
+          {Array.isArray(galleryImages) && galleryImages.map((image) => (
           <div key={image.id} className={`gallery-item-admin ${image.isMain ? 'main-image' : ''}`}>
             <img src={image.src} alt={image.alt} />
             <div className="gallery-item-actions">

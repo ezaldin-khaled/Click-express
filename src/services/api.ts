@@ -9,6 +9,11 @@ const api = axios.create({
   },
 })
 
+// Add cache-busting to prevent browser caching issues
+api.defaults.params = {
+  _t: Date.now()
+}
+
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
@@ -75,6 +80,11 @@ export const galleryAPI = {
   
   updateImage: async (id: string, data: any) => {
     const response = await api.put(`/api/gallery/${id}`, data)
+    return response.data
+  },
+  
+  setMainImage: async (id: string) => {
+    const response = await api.put(`/api/gallery/${id}`, { isMain: true })
     return response.data
   }
 }
