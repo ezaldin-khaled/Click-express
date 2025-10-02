@@ -3,8 +3,8 @@ import axios from 'axios'
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: import.meta.env.DEV 
-    ? 'http://localhost:8080/api'  // Development: local Go backend
-    : 'https://www.clickexpress.ae/api',  // Production: Go backend
+    ? 'http://localhost:8080'  // Development: local Go backend
+    : 'https://clickexpress.ae',  // Production: Go backend (without www)
   timeout: 10000, // 10 seconds timeout
   headers: {
     'Content-Type': 'application/json',
