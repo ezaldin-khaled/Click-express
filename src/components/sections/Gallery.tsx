@@ -1,29 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { GalleryImage } from '../../types'
+import { galleryAPI } from '../../services/api'
 
 const Gallery: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
-  
-  const galleryImages: GalleryImage[] = [
-    {
-      id: '1',
-      src: '/assets/gallery 1.jpg',
-      alt: 'Truck fleet',
-      isMain: true
-    },
-    {
-      id: '2',
-      src: '/assets/gallery2.png',
-      alt: 'Container yard'
-    },
-    {
-      id: '3',
-      src: '/assets/gallery3.jpg',
-      alt: 'Port operations'
+
+  // Load gallery images from API
+  useEffect(() => {
+    const loadGalleryImages = async () => {
+      try {
+        const images = await galleryAPI.getImages()
+        setGalleryImages(images)
+      } catch (error) {
+        console.error('Error loading gallery images:', error)
+        // Fallback to hardcoded images if API fails
+        setGalleryImages([
+          {
+            id: '1',
+            src: '/assets/gallery 1.jpg',
+            alt: 'Truck fleet',
+            isMain: true
+          },
+          {
+            id: '2',
+            src: '/assets/gallery2.png',
+            alt: 'Container yard'
+          },
+          {
+            id: '3',
+            src: '/assets/gallery3.jpg',
+            alt: 'Port operations'
+          }
+        ])
+      } finally {
+        setIsLoading(false)
+      }
     }
-  ]
+
+    loadGalleryImages()
+  }, [])
 
   // Auto-slide functionality
   useEffect(() => {
@@ -55,6 +74,32 @@ const Gallery: React.FC = () => {
 
   const handleMouseLeave = () => {
     setIsPaused(false)
+  }
+
+  if (isLoading) {
+    return (
+      <section className="gallery" id="gallery">
+        <div className="container">
+          <div className="section-header">
+            <h2>Gallery</h2>
+            <p>Loading gallery images...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (galleryImages.length === 0) {
+    return (
+      <section className="gallery" id="gallery">
+        <div className="container">
+          <div className="section-header">
+            <h2>Gallery</h2>
+            <p>No gallery images available.</p>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
