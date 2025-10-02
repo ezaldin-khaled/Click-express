@@ -93,19 +93,19 @@ export const galleryAPI = {
 export const blogAPI = {
   // Admin: Get all blogs (including unpublished)
   getPosts: async () => {
-    const response = await api.get('/blogs')
+    const response = await api.get('/api/blogs')
     return response.data
   },
   
   // Public: Get only published blogs
   getPublicPosts: async () => {
-    const response = await api.get('/blogs/public')
+    const response = await api.get('/api/blogs/public')
     return response.data
   },
   
   // Get single blog by ID
   getPost: async (id: string) => {
-    const response = await api.get(`/blogs/${id}`)
+    const response = await api.get(`/api/blogs/${id}`)
     return response.data
   },
   
@@ -117,7 +117,7 @@ export const blogAPI = {
     image_file?: string;
     published?: boolean;
   }) => {
-    const response = await api.post('/blogs', postData)
+    const response = await api.post('/api/blogs', postData)
     return response.data
   },
   
@@ -129,13 +129,13 @@ export const blogAPI = {
     image_file?: string;
     published?: boolean;
   }) => {
-    const response = await api.put(`/blogs/${id}`, postData)
+    const response = await api.put(`/api/blogs/${id}`, postData)
     return response.data
   },
   
   // Delete blog post
   deletePost: async (id: string) => {
-    const response = await api.delete(`/blogs/${id}`)
+    const response = await api.delete(`/api/blogs/${id}`)
     return response.data
   }
 }
@@ -149,31 +149,31 @@ export const contactAPI = {
     subject?: string;
     message: string;
   }) => {
-    const response = await api.post('/contacts', contactData)
+    const response = await api.post('/api/contacts', contactData)
     return response.data
   },
   
   // Admin: Get all contact submissions
   getSubmissions: async () => {
-    const response = await api.get('/contacts')
+    const response = await api.get('/api/contacts')
     return response.data
   },
   
   // Get single contact by ID
   getSubmission: async (id: string) => {
-    const response = await api.get(`/contacts/${id}`)
+    const response = await api.get(`/api/contacts/${id}`)
     return response.data
   },
   
   // Update contact status
   updateSubmissionStatus: async (id: string, status: 'pending' | 'read' | 'replied') => {
-    const response = await api.put(`/contacts/${id}`, { status })
+    const response = await api.put(`/api/contacts/${id}`, { status })
     return response.data
   },
   
   // Delete contact submission
   deleteSubmission: async (id: string) => {
-    const response = await api.delete(`/contacts/${id}`)
+    const response = await api.delete(`/api/contacts/${id}`)
     return response.data
   }
 }
