@@ -43,6 +43,7 @@ export interface BlogPost {
   content: string
   hasBackgroundImage: boolean
   backgroundImage?: string
+  published?: boolean
   createdAt: string
   updatedAt: string
 }
@@ -64,5 +65,5 @@ export interface ContactSubmission {
   lastName: string
   message: string
   submittedAt: string
-  status: 'new' | 'read' | 'replied'
+  status: 'pending' | 'read' | 'replied'
 }

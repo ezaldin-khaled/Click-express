@@ -1,46 +1,65 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BlogPost } from '../../types'
+import { blogAPI } from '../../services/api'
 
-const BlogManagement: React.FC = () => {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([
-    {
-      id: '1',
-      title: "Blog title heading will go here",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-      hasBackgroundImage: false,
-      createdAt: '2024-01-15',
-      updatedAt: '2024-01-15'
-    },
-    {
-      id: '2',
-      title: "Another Blog Post",
-      content: "This is another blog post with different content. It demonstrates the blog management functionality.",
-      hasBackgroundImage: false,
-      createdAt: '2024-01-16',
-      updatedAt: '2024-01-16'
-    }
-  ])
+interface BlogManagementProps {
+  onNotification?: (type: 'success' | 'error', message: string) => void
+}
 
+const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
     hasBackgroundImage: false,
-    backgroundImage: ''
+    backgroundImage: '',
+    published: false
   })
 
-  const handleAddPost = (e: React.FormEvent) => {
-    e.preventDefault()
-    const post: BlogPost = {
-      id: Date.now().toString(),
-      ...newPost,
-      createdAt: new Date().toISOString().split('T')[0],
-      updatedAt: new Date().toISOString().split('T')[0]
+  // Load blog posts on component mount
+  useEffect(() => {
+    loadBlogPosts()
+  }, [])
+
+  const loadBlogPosts = async () => {
+    setIsLoading(true)
+    try {
+      const posts = await blogAPI.getPosts()
+      setBlogPosts(posts)
+    } catch (error) {
+      console.error('Error loading blog posts:', error)
+      onNotification?.('error', 'Failed to load blog posts')
+    } finally {
+      setIsLoading(false)
     }
-    setBlogPosts([...blogPosts, post])
-    setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '' })
-    setShowAddForm(false)
+  }
+
+  const handleAddPost = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const postData = {
+        title: newPost.title,
+        content: newPost.content,
+        image_name: newPost.backgroundImage || undefined,
+        image_file: newPost.backgroundImage || undefined,
+        published: newPost.published
+      }
+      
+      const createdPost = await blogAPI.createPost(postData)
+      setBlogPosts([...blogPosts, createdPost])
+      setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '', published: false })
+      setShowAddForm(false)
+      onNotification?.('success', 'Blog post created successfully')
+    } catch (error) {
+      console.error('Error creating blog post:', error)
+      onNotification?.('error', 'Failed to create blog post')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleEditPost = (post: BlogPost) => {
@@ -49,34 +68,60 @@ const BlogManagement: React.FC = () => {
       title: post.title,
       content: post.content,
       hasBackgroundImage: post.hasBackgroundImage,
-      backgroundImage: post.backgroundImage || ''
+      backgroundImage: post.backgroundImage || '',
+      published: post.published || false
     })
     setShowAddForm(true)
   }
 
-  const handleUpdatePost = (e: React.FormEvent) => {
+  const handleUpdatePost = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editingPost) return
 
-    const updatedPost: BlogPost = {
-      ...editingPost,
-      ...newPost,
-      updatedAt: new Date().toISOString().split('T')[0]
+    setIsLoading(true)
+    try {
+      const postData = {
+        title: newPost.title,
+        content: newPost.content,
+        image_name: newPost.backgroundImage || undefined,
+        image_file: newPost.backgroundImage || undefined,
+        published: newPost.published
+      }
+      
+      const updatedPost = await blogAPI.updatePost(editingPost.id, postData)
+      setBlogPosts(blogPosts.map(post => post.id === editingPost.id ? updatedPost : post))
+      setEditingPost(null)
+      setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '', published: false })
+      setShowAddForm(false)
+      onNotification?.('success', 'Blog post updated successfully')
+    } catch (error) {
+      console.error('Error updating blog post:', error)
+      onNotification?.('error', 'Failed to update blog post')
+    } finally {
+      setIsLoading(false)
     }
-    setBlogPosts(blogPosts.map(post => post.id === editingPost.id ? updatedPost : post))
-    setEditingPost(null)
-    setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '' })
-    setShowAddForm(false)
   }
 
-  const handleDeletePost = (id: string) => {
-    setBlogPosts(blogPosts.filter(post => post.id !== id))
+  const handleDeletePost = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this blog post?')) return
+    
+    setIsLoading(true)
+    try {
+      await blogAPI.deletePost(id)
+      setBlogPosts(blogPosts.filter(post => post.id !== id))
+      onNotification?.('success', 'Blog post deleted successfully')
+    } catch (error) {
+      console.error('Error deleting blog post:', error)
+      onNotification?.('error', 'Failed to delete blog post')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleCancel = () => {
     setShowAddForm(false)
     setEditingPost(null)
-    setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '' })
+    setNewPost({ title: '', content: '', hasBackgroundImage: false, backgroundImage: '', published: false })
   }
 
   return (
@@ -135,11 +180,37 @@ const BlogManagement: React.FC = () => {
                 />
               </div>
             )}
+            <div className="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={newPost.published}
+                  onChange={(e) => setNewPost({...newPost, published: e.target.checked})}
+                />
+                Publish immediately
+              </label>
+            </div>
             <div className="form-actions">
-              <button type="submit" className="btn btn-primary">
-                {editingPost ? 'Update Post' : 'Add Post'}
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    {editingPost ? 'Updating...' : 'Creating...'}
+                  </>
+                ) : (
+                  editingPost ? 'Update Post' : 'Add Post'
+                )}
               </button>
-              <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={handleCancel}
+                disabled={isLoading}
+              >
                 Cancel
               </button>
             </div>
@@ -147,8 +218,14 @@ const BlogManagement: React.FC = () => {
         </div>
       )}
 
-      <div className="blog-posts-admin">
-        {blogPosts.map((post) => (
+      {isLoading && !showAddForm ? (
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading blog posts...</p>
+        </div>
+      ) : (
+        <div className="blog-posts-admin">
+          {blogPosts.map((post) => (
           <div key={post.id} className="blog-post-admin">
             <div className="blog-post-content">
               <h3>{post.title}</h3>
@@ -175,7 +252,8 @@ const BlogManagement: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

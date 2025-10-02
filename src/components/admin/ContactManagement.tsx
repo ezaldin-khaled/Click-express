@@ -1,42 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ContactSubmission } from '../../types'
+import { contactAPI } from '../../services/api'
 
-const ContactManagement: React.FC = () => {
-  const [submissions, setSubmissions] = useState<ContactSubmission[]>([
-    {
-      id: '1',
-      email: 'john.doe@example.com',
-      phone: '+1-555-0123',
-      firstName: 'John',
-      lastName: 'Doe',
-      message: 'I need a quote for shipping my products from New York to Los Angeles.',
-      submittedAt: '2024-01-15T10:30:00Z',
-      status: 'new'
-    },
-    {
-      id: '2',
-      email: 'jane.smith@example.com',
-      phone: '+1-555-0456',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      message: 'Looking for logistics services for our e-commerce business.',
-      submittedAt: '2024-01-16T14:20:00Z',
-      status: 'read'
-    },
-    {
-      id: '3',
-      email: 'bob.wilson@example.com',
-      phone: '+1-555-0789',
-      firstName: 'Bob',
-      lastName: 'Wilson',
-      message: 'Need urgent delivery services for medical supplies.',
-      submittedAt: '2024-01-17T09:15:00Z',
-      status: 'replied'
-    }
-  ])
+interface ContactManagementProps {
+  onNotification?: (type: 'success' | 'error', message: string) => void
+}
 
-  const [filter, setFilter] = useState<'all' | 'new' | 'read' | 'replied'>('all')
+const ContactManagement: React.FC<ContactManagementProps> = ({ onNotification }) => {
+  const [submissions, setSubmissions] = useState<ContactSubmission[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [filter, setFilter] = useState<'all' | 'pending' | 'read' | 'replied'>('all')
   const [searchTerm, setSearchTerm] = useState('')
+
+  // Load contact submissions on component mount
+  useEffect(() => {
+    loadSubmissions()
+  }, [])
+
+  const loadSubmissions = async () => {
+    setIsLoading(true)
+    try {
+      const data = await contactAPI.getSubmissions()
+      setSubmissions(data)
+    } catch (error) {
+      console.error('Error loading contact submissions:', error)
+      onNotification?.('error', 'Failed to load contact submissions')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const filteredSubmissions = submissions.filter(submission => {
     const matchesFilter = filter === 'all' || submission.status === filter
@@ -49,14 +41,36 @@ const ContactManagement: React.FC = () => {
     return matchesFilter && matchesSearch
   })
 
-  const handleStatusChange = (id: string, status: 'new' | 'read' | 'replied') => {
-    setSubmissions(submissions.map(sub => 
-      sub.id === id ? { ...sub, status } : sub
-    ))
+  const handleStatusChange = async (id: string, status: 'pending' | 'read' | 'replied') => {
+    setIsLoading(true)
+    try {
+      await contactAPI.updateSubmissionStatus(id, status)
+      setSubmissions(submissions.map(sub => 
+        sub.id === id ? { ...sub, status } : sub
+      ))
+      onNotification?.('success', 'Status updated successfully')
+    } catch (error) {
+      console.error('Error updating status:', error)
+      onNotification?.('error', 'Failed to update status')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const handleDeleteSubmission = (id: string) => {
-    setSubmissions(submissions.filter(sub => sub.id !== id))
+  const handleDeleteSubmission = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this submission?')) return
+    
+    setIsLoading(true)
+    try {
+      await contactAPI.deleteSubmission(id)
+      setSubmissions(submissions.filter(sub => sub.id !== id))
+      onNotification?.('success', 'Submission deleted successfully')
+    } catch (error) {
+      console.error('Error deleting submission:', error)
+      onNotification?.('error', 'Failed to delete submission')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const formatDate = (dateString: string) => {
@@ -71,7 +85,7 @@ const ContactManagement: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return 'status-new'
+      case 'pending': return 'status-new'
       case 'read': return 'status-read'
       case 'replied': return 'status-replied'
       default: return ''
@@ -89,7 +103,7 @@ const ContactManagement: React.FC = () => {
           <label>Filter:</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value as any)}>
             <option value="all">All Submissions</option>
-            <option value="new">New</option>
+            <option value="pending">Pending</option>
             <option value="read">Read</option>
             <option value="replied">Replied</option>
           </select>
@@ -111,8 +125,8 @@ const ContactManagement: React.FC = () => {
           <p>Total Submissions</p>
         </div>
         <div className="stat-card">
-          <h3>{submissions.filter(sub => sub.status === 'new').length}</h3>
-          <p>New</p>
+          <h3>{submissions.filter(sub => sub.status === 'pending').length}</h3>
+          <p>Pending</p>
         </div>
         <div className="stat-card">
           <h3>{submissions.filter(sub => sub.status === 'read').length}</h3>
@@ -124,8 +138,14 @@ const ContactManagement: React.FC = () => {
         </div>
       </div>
 
-      <div className="submissions-list">
-        {filteredSubmissions.map((submission) => (
+      {isLoading ? (
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading contact submissions...</p>
+        </div>
+      ) : (
+        <div className="submissions-list">
+          {filteredSubmissions.map((submission) => (
           <div key={submission.id} className="submission-item">
             <div className="submission-header">
               <div className="submission-contact">
@@ -148,10 +168,10 @@ const ContactManagement: React.FC = () => {
             <div className="submission-actions">
               <div className="status-actions">
                 <button 
-                  className={`btn btn-sm ${submission.status === 'new' ? 'btn-primary' : 'btn-secondary'}`}
-                  onClick={() => handleStatusChange(submission.id, 'new')}
+                  className={`btn btn-sm ${submission.status === 'pending' ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => handleStatusChange(submission.id, 'pending')}
                 >
-                  Mark as New
+                  Mark as Pending
                 </button>
                 <button 
                   className={`btn btn-sm ${submission.status === 'read' ? 'btn-primary' : 'btn-secondary'}`}
@@ -183,9 +203,10 @@ const ContactManagement: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
-      {filteredSubmissions.length === 0 && (
+      {filteredSubmissions.length === 0 && !isLoading && (
         <div className="no-results">
           <p>No submissions found matching your criteria.</p>
         </div>

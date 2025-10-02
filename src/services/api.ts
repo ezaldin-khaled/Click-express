@@ -58,30 +58,25 @@ export const authAPI = {
   }
 }
 
-// Gallery API functions (Note: Gallery endpoints not in Go backend docs)
-// These may need to be implemented in your Go backend or removed
+// Gallery API functions
 export const galleryAPI = {
   getImages: async () => {
-    const response = await api.get('/gallery')
+    const response = await api.get('/api/gallery')
     return response.data
   },
   
-  uploadImage: async (formData: FormData) => {
-    const response = await api.post('/gallery/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+  uploadImage: async (imageData: { src: string; alt: string; isMain: boolean }) => {
+    const response = await api.post('/api/gallery/upload', imageData)
     return response.data
   },
   
   deleteImage: async (id: string) => {
-    const response = await api.delete(`/gallery/${id}`)
+    const response = await api.delete(`/api/gallery/${id}`)
     return response.data
   },
   
   updateImage: async (id: string, data: any) => {
-    const response = await api.put(`/gallery/${id}`, data)
+    const response = await api.put(`/api/gallery/${id}`, data)
     return response.data
   }
 }

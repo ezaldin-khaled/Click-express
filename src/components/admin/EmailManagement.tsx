@@ -1,34 +1,58 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { EmailSubscriber } from '../../types'
 
-const EmailManagement: React.FC = () => {
-  const [subscribers, setSubscribers] = useState<EmailSubscriber[]>([
-    {
-      id: '1',
-      email: 'john.doe@example.com',
-      firstName: 'John',
-      lastName: 'Doe',
-      subscribedAt: '2024-01-15',
-      isActive: true
-    },
-    {
-      id: '2',
-      email: 'jane.smith@example.com',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      subscribedAt: '2024-01-16',
-      isActive: true
-    },
-    {
-      id: '3',
-      email: 'bob.wilson@example.com',
-      subscribedAt: '2024-01-17',
-      isActive: false
-    }
-  ])
+interface EmailManagementProps {
+  onNotification?: (type: 'success' | 'error', message: string) => void
+}
 
+const EmailManagement: React.FC<EmailManagementProps> = ({ onNotification }) => {
+  const [subscribers, setSubscribers] = useState<EmailSubscriber[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all')
   const [searchTerm, setSearchTerm] = useState('')
+
+  // Load email subscribers on component mount
+  useEffect(() => {
+    loadSubscribers()
+  }, [])
+
+  const loadSubscribers = async () => {
+    setIsLoading(true)
+    try {
+      // Note: Email API endpoints may need to be implemented in the backend
+      // For now, we'll use mock data
+      const mockSubscribers: EmailSubscriber[] = [
+        {
+          id: '1',
+          email: 'john.doe@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          subscribedAt: '2024-01-15',
+          isActive: true
+        },
+        {
+          id: '2',
+          email: 'jane.smith@example.com',
+          firstName: 'Jane',
+          lastName: 'Smith',
+          subscribedAt: '2024-01-16',
+          isActive: true
+        },
+        {
+          id: '3',
+          email: 'bob.wilson@example.com',
+          subscribedAt: '2024-01-17',
+          isActive: false
+        }
+      ]
+      setSubscribers(mockSubscribers)
+    } catch (error) {
+      console.error('Error loading email subscribers:', error)
+      onNotification?.('error', 'Failed to load email subscribers')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const filteredSubscribers = subscribers.filter(subscriber => {
     const matchesFilter = filter === 'all' || 
@@ -113,8 +137,14 @@ const EmailManagement: React.FC = () => {
         </div>
       </div>
 
-      <div className="subscribers-list">
-        {filteredSubscribers.map((subscriber) => (
+      {isLoading ? (
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading email subscribers...</p>
+        </div>
+      ) : (
+        <div className="subscribers-list">
+          {filteredSubscribers.map((subscriber) => (
           <div key={subscriber.id} className={`subscriber-item ${!subscriber.isActive ? 'inactive' : ''}`}>
             <div className="subscriber-info">
               <div className="subscriber-email">{subscriber.email}</div>
@@ -146,9 +176,10 @@ const EmailManagement: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
-      {filteredSubscribers.length === 0 && (
+      {filteredSubscribers.length === 0 && !isLoading && (
         <div className="no-results">
           <p>No subscribers found matching your criteria.</p>
         </div>

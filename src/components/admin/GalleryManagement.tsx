@@ -1,26 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { GalleryImage } from '../../types'
+import { galleryAPI } from '../../services/api'
 
-const GalleryManagement: React.FC = () => {
-  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([
-    {
-      id: '1',
-      src: '/assets/gallery 1.jpg',
-      alt: 'Truck fleet',
-      isMain: true
-    },
-    {
-      id: '2',
-      src: '/assets/gallery2.png',
-      alt: 'Container yard'
-    },
-    {
-      id: '3',
-      src: '/assets/gallery3.jpg',
-      alt: 'Port operations'
-    }
-  ])
+interface GalleryManagementProps {
+  onNotification?: (type: 'success' | 'error', message: string) => void
+}
 
+const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification }) => {
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
   const [newImage, setNewImage] = useState({
     src: '',
@@ -28,26 +16,91 @@ const GalleryManagement: React.FC = () => {
     isMain: false
   })
 
-  const handleAddImage = (e: React.FormEvent) => {
-    e.preventDefault()
-    const image: GalleryImage = {
-      id: Date.now().toString(),
-      ...newImage
+  // Load gallery images on component mount
+  useEffect(() => {
+    loadGalleryImages()
+  }, [])
+
+  const loadGalleryImages = async () => {
+    setIsLoading(true)
+    try {
+      const images = await galleryAPI.getImages()
+      setGalleryImages(images)
+    } catch (error) {
+      console.error('Error loading gallery images:', error)
+      onNotification?.('error', 'Failed to load gallery images')
+    } finally {
+      setIsLoading(false)
     }
-    setGalleryImages([...galleryImages, image])
-    setNewImage({ src: '', alt: '', isMain: false })
-    setShowAddForm(false)
   }
 
-  const handleDeleteImage = (id: string) => {
-    setGalleryImages(galleryImages.filter(img => img.id !== id))
+  const handleAddImage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const imageData = {
+        src: newImage.src,
+        alt: newImage.alt,
+        isMain: newImage.isMain
+      }
+      
+      const createdImage = await galleryAPI.uploadImage(imageData)
+      setGalleryImages([...galleryImages, createdImage])
+      setNewImage({ src: '', alt: '', isMain: false })
+      setShowAddForm(false)
+      onNotification?.('success', 'Image added successfully')
+    } catch (error) {
+      console.error('Error adding image:', error)
+      onNotification?.('error', 'Failed to add image')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const handleSetMain = (id: string) => {
-    setGalleryImages(galleryImages.map(img => ({
-      ...img,
-      isMain: img.id === id
-    })))
+  const handleDeleteImage = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this image?')) return
+    
+    setIsLoading(true)
+    try {
+      await galleryAPI.deleteImage(id)
+      setGalleryImages(galleryImages.filter(img => img.id !== id))
+      onNotification?.('success', 'Image deleted successfully')
+    } catch (error) {
+      console.error('Error deleting image:', error)
+      onNotification?.('error', 'Failed to delete image')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleSetMain = async (id: string) => {
+    setIsLoading(true)
+    try {
+      // First, set all images to not main
+      const updatedImages = galleryImages.map(img => ({
+        ...img,
+        isMain: false
+      }))
+      
+      // Then set the selected image as main
+      const finalImages = updatedImages.map(img => ({
+        ...img,
+        isMain: img.id === id
+      }))
+      
+      // Update each image via API
+      for (const img of finalImages) {
+        await galleryAPI.updateImage(img.id, { isMain: img.isMain })
+      }
+      
+      setGalleryImages(finalImages)
+      onNotification?.('success', 'Main image updated successfully')
+    } catch (error) {
+      console.error('Error updating main image:', error)
+      onNotification?.('error', 'Failed to update main image')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -100,8 +153,14 @@ const GalleryManagement: React.FC = () => {
         </div>
       )}
 
-      <div className="gallery-grid-admin">
-        {galleryImages.map((image) => (
+      {isLoading ? (
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Loading gallery images...</p>
+        </div>
+      ) : (
+        <div className="gallery-grid-admin">
+          {galleryImages.map((image) => (
           <div key={image.id} className={`gallery-item-admin ${image.isMain ? 'main-image' : ''}`}>
             <img src={image.src} alt={image.alt} />
             <div className="gallery-item-actions">
@@ -126,7 +185,8 @@ const GalleryManagement: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
