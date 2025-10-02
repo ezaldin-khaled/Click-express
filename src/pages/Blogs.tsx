@@ -12,7 +12,7 @@ const Blogs: React.FC = () => {
     const loadBlogPosts = async () => {
       try {
         const posts = await blogAPI.getPublicPosts()
-        setBlogPosts(posts)
+        setBlogPosts(Array.isArray(posts) ? posts : [])
       } catch (error) {
         console.error('Error loading blog posts:', error)
         // Fallback to hardcoded posts if API fails
@@ -72,7 +72,7 @@ const Blogs: React.FC = () => {
     <div className="blogs-page">
       <div className="container">
         <div className="blogs-grid">
-          {blogPosts.map((post) => (
+          {Array.isArray(blogPosts) && blogPosts.map((post) => (
             <BlogCard
               key={post.id}
               title={post.title}

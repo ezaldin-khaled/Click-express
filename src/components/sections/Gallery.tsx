@@ -14,7 +14,7 @@ const Gallery: React.FC = () => {
     const loadGalleryImages = async () => {
       try {
         const images = await galleryAPI.getImages()
-        setGalleryImages(images)
+        setGalleryImages(Array.isArray(images) ? images : [])
       } catch (error) {
         console.error('Error loading gallery images:', error)
         // Fallback to hardcoded images if API fails
@@ -120,7 +120,7 @@ const Gallery: React.FC = () => {
               className="slider-track"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {galleryImages.map((image) => (
+              {Array.isArray(galleryImages) && galleryImages.map((image) => (
                 <div key={image.id} className="slide">
                   <img src={image.src} alt={image.alt} />
                 </div>
@@ -131,7 +131,7 @@ const Gallery: React.FC = () => {
           
           {/* Arrow indicators */}
           <div className="slider-arrow-indicators">
-            {galleryImages.map((_, index) => (
+            {Array.isArray(galleryImages) && galleryImages.map((_, index) => (
               <button
                 key={index}
                 className={`arrow-indicator ${index === currentSlide ? 'active' : ''}`}
