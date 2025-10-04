@@ -65,7 +65,7 @@ const ContactForm: React.FC = () => {
             {/* Success Message */}
             {submitStatus === 'success' && (
               <div className="form-message success-message">
-                <p>Thank you! Your quote request has been submitted successfully. We'll get back to you soon.</p>
+                <p>Thank you! Your request has been submitted successfully. We'll get back to you soon.</p>
               </div>
             )}
 

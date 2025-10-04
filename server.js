@@ -56,34 +56,40 @@ let mockData = {
   contacts: [
     {
       id: '1',
-      name: 'John Doe',
+      firstName: 'John',
+      lastName: 'Doe',
       email: 'john.doe@example.com',
       phone: '+1-555-0123',
       subject: 'Shipping Quote',
       message: 'I need a quote for shipping my products from New York to Los Angeles.',
       status: 'pending',
+      submittedAt: '2024-01-15T10:30:00Z',
       created_at: '2024-01-15T10:30:00Z',
       updated_at: '2024-01-15T10:30:00Z'
     },
     {
       id: '2',
-      name: 'Jane Smith',
+      firstName: 'Jane',
+      lastName: 'Smith',
       email: 'jane.smith@example.com',
       phone: '+1-555-0456',
       subject: 'Logistics Services',
       message: 'Looking for logistics services for our e-commerce business.',
       status: 'read',
+      submittedAt: '2024-01-16T14:20:00Z',
       created_at: '2024-01-16T14:20:00Z',
       updated_at: '2024-01-16T14:20:00Z'
     },
     {
       id: '3',
-      name: 'Bob Wilson',
+      firstName: 'Bob',
+      lastName: 'Wilson',
       email: 'bob.wilson@example.com',
       phone: '+1-555-0789',
       subject: 'Urgent Delivery',
       message: 'Need urgent delivery services for medical supplies.',
       status: 'replied',
+      submittedAt: '2024-01-17T09:15:00Z',
       created_at: '2024-01-17T09:15:00Z',
       updated_at: '2024-01-17T09:15:00Z'
     }
@@ -224,10 +230,31 @@ app.get('/api/contacts/:id', (req, res) => {
 });
 
 app.post('/api/contacts', (req, res) => {
+  // Handle both old format (firstName/lastName) and new format (name)
+  let firstName = '';
+  let lastName = '';
+  
+  if (req.body.name) {
+    // New format: split the name field
+    const nameParts = req.body.name.trim().split(' ');
+    firstName = nameParts[0] || '';
+    lastName = nameParts.slice(1).join(' ') || '';
+  } else {
+    // Old format: use separate fields
+    firstName = req.body.firstName || '';
+    lastName = req.body.lastName || '';
+  }
+
   const newContact = {
     id: Date.now().toString(),
-    ...req.body,
+    firstName: firstName,
+    lastName: lastName,
+    email: req.body.email || '',
+    phone: req.body.phone || '',
+    message: req.body.message || '',
+    subject: req.body.subject || 'Inquiry about Click Express',
     status: 'pending',
+    submittedAt: new Date().toISOString(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };
