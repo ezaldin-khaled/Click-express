@@ -61,6 +61,27 @@ export const authAPI = {
   }
 }
 
+// Helper function to manage localStorage quota
+const manageLocalStorageQuota = (data: any[]) => {
+  try {
+    localStorage.setItem('galleryImages', JSON.stringify(data))
+    return true
+  } catch (quotaError) {
+    console.warn('localStorage quota exceeded, clearing old images:', quotaError)
+    // Clear old images and keep only recent ones
+    const recentImages = data.slice(-10) // Keep only last 10 images
+    try {
+      localStorage.setItem('galleryImages', JSON.stringify(recentImages))
+      return true
+    } catch (secondError) {
+      console.error('Failed to save even reduced data:', secondError)
+      // Clear all gallery data as last resort
+      localStorage.removeItem('galleryImages')
+      return false
+    }
+  }
+}
+
 // Gallery API functions - with fallback system
 export const galleryAPI = {
   // Get all gallery images (public)
@@ -176,20 +197,34 @@ export const galleryAPI = {
       return response.data
     } catch (error) {
       console.warn('Upload image failed, using local storage fallback:', error)
-      // Fallback to localStorage for now
-      const newImage = {
-        id: Date.now(),
-        ...imageData,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+      
+      try {
+        // Fallback to localStorage
+        const newImage = {
+          id: Date.now(),
+          ...imageData,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+        
+        // Get existing images and add new one
+        const existingImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
+        const updatedImages = [...existingImages, newImage]
+        
+        // Try to save to localStorage with quota handling
+        manageLocalStorageQuota(updatedImages)
+        
+        return newImage
+      } catch (fallbackError) {
+        console.error('Fallback storage failed:', fallbackError)
+        // Return image without persistence if all storage fails
+        return {
+          id: Date.now(),
+          ...imageData,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
       }
-      
-      // Store in localStorage as fallback
-      const existingImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
-      const updatedImages = [...existingImages, newImage]
-      localStorage.setItem('galleryImages', JSON.stringify(updatedImages))
-      
-      return newImage
     }
   },
   
@@ -208,7 +243,7 @@ export const galleryAPI = {
       const updatedImages = existingImages.map((img: any) => 
         img.id === parseInt(id) ? { ...img, ...data, updated_at: new Date().toISOString() } : img
       )
-      localStorage.setItem('galleryImages', JSON.stringify(updatedImages))
+      manageLocalStorageQuota(updatedImages)
       
       return { message: 'Image updated successfully (local storage)' }
     }
@@ -227,7 +262,7 @@ export const galleryAPI = {
       // Fallback to localStorage
       const existingImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
       const updatedImages = existingImages.filter((img: any) => img.id !== parseInt(id))
-      localStorage.setItem('galleryImages', JSON.stringify(updatedImages))
+      manageLocalStorageQuota(updatedImages)
       
       return { message: 'Image deleted successfully (local storage)' }
     }
