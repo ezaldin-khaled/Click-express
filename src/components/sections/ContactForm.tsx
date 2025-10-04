@@ -58,7 +58,7 @@ const ContactForm: React.FC = () => {
     <section className="contact-form" id="contact">
       <div className="container">
         <div className="contact-form-content">
-          <h2>Get a Quote</h2>
+          <h2>Get in Touch</h2>
           <p>Contact us to order our logistics services and get a personalized quote</p>
           
           <form className="contact-form-form" onSubmit={handleSubmit}>
@@ -129,7 +129,7 @@ const ContactForm: React.FC = () => {
               className="contact-btn"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Request Quote'}
+              {isSubmitting ? 'Sending Email...' : 'Send Email'}
             </button>
           </form>
         </div>
