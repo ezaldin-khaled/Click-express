@@ -68,10 +68,12 @@ export interface EmailSubscriber {
 export interface ContactSubmission {
   id: string
   email: string
-  phone: string
-  firstName: string
-  lastName: string
+  phone?: string
+  firstName?: string
+  lastName?: string
+  name?: string  // For production server format
   message: string
-  submittedAt: string
+  submittedAt?: string
+  created_at?: string  // Alternative date field
   status: 'pending' | 'read' | 'replied'
 }

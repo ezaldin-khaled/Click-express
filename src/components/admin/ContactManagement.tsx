@@ -33,9 +33,13 @@ const ContactManagement: React.FC<ContactManagementProps> = ({ onNotification })
   const filteredSubmissions = submissions.filter(submission => {
     const matchesFilter = filter === 'all' || submission.status === filter
     
+    // Handle both firstName/lastName and name formats
+    const firstName = submission.firstName || (submission.name ? submission.name.split(' ')[0] : '')
+    const lastName = submission.lastName || (submission.name ? submission.name.split(' ').slice(1).join(' ') : '')
+    
     const matchesSearch = submission.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      submission.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      submission.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       submission.message.toLowerCase().includes(searchTerm.toLowerCase())
     
     return matchesFilter && matchesSearch
@@ -81,6 +85,21 @@ const ContactManagement: React.FC<ContactManagementProps> = ({ onNotification })
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  // Helper function to get display name
+  const getDisplayName = (submission: any) => {
+    if (submission.firstName && submission.lastName) {
+      return `${submission.firstName} ${submission.lastName}`
+    } else if (submission.name) {
+      return submission.name
+    }
+    return 'Unknown'
+  }
+
+  // Helper function to get display date
+  const getDisplayDate = (submission: any) => {
+    return submission.submittedAt || submission.created_at || new Date().toISOString()
   }
 
   const getStatusColor = (status: string) => {
@@ -149,15 +168,15 @@ const ContactManagement: React.FC<ContactManagementProps> = ({ onNotification })
           <div key={submission.id} className="submission-item">
             <div className="submission-header">
               <div className="submission-contact">
-                <h4>{submission.firstName} {submission.lastName}</h4>
+                <h4>{getDisplayName(submission)}</h4>
                 <p className="submission-email">{submission.email}</p>
-                <p className="submission-phone">{submission.phone}</p>
+                {submission.phone && <p className="submission-phone">{submission.phone}</p>}
               </div>
               <div className="submission-meta">
                 <span className={`status-badge ${getStatusColor(submission.status)}`}>
                   {submission.status.charAt(0).toUpperCase() + submission.status.slice(1)}
                 </span>
-                <span className="submission-date">{formatDate(submission.submittedAt)}</span>
+                <span className="submission-date">{formatDate(getDisplayDate(submission))}</span>
               </div>
             </div>
             
