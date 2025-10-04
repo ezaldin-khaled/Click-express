@@ -60,8 +60,13 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     e.preventDefault()
     
     // Validate form data
-    if (!newImage.image_name.trim() || !newImage.image_file.trim()) {
-      onNotification?.('error', 'Please fill in all required fields')
+    if (!newImage.image_name.trim()) {
+      onNotification?.('error', 'Please enter an image name')
+      return
+    }
+    
+    if (!newImage.image_file.trim()) {
+      onNotification?.('error', 'Please upload an image file')
       return
     }
     
@@ -143,12 +148,13 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
         <div className="admin-form">
           <form onSubmit={handleAddImage}>
             <div className="form-group">
-              <label>Upload Image File</label>
+              <label>Upload Image File *</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
                 className="file-input"
+                required
               />
               {uploadPreview && (
                 <div className="image-preview">
@@ -158,23 +164,13 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
             </div>
             
             <div className="form-group">
-              <label>Image Name</label>
+              <label>Image Name *</label>
               <input
                 type="text"
                 value={newImage.image_name}
                 onChange={(e) => setNewImage({...newImage, image_name: e.target.value})}
                 placeholder="Enter image name"
                 required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Or Enter Image URL</label>
-              <input
-                type="url"
-                value={newImage.image_file}
-                onChange={(e) => setNewImage({...newImage, image_file: e.target.value})}
-                placeholder="Enter image URL"
               />
             </div>
             
