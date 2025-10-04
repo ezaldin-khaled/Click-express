@@ -4,7 +4,6 @@ import { contactAPI } from '../../services/api'
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
-    phone: '',
     firstName: '',
     lastName: '',
     message: ''
@@ -32,8 +31,8 @@ const ContactForm: React.FC = () => {
       const contactData = {
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        subject: 'Service Quote Request',
-        message: `Phone: ${formData.phone}\n\nMessage: ${formData.message}`
+        subject: 'Inquiry about Click Express',
+        message: formData.message
       }
 
       await contactAPI.submitContact(contactData)
@@ -42,7 +41,6 @@ const ContactForm: React.FC = () => {
       // Reset form after successful submission
       setFormData({
         email: '',
-        phone: '',
         firstName: '',
         lastName: '',
         message: ''
@@ -84,18 +82,6 @@ const ContactForm: React.FC = () => {
                 name="email"
                 placeholder="Email"
                 value={formData.email}
-                onChange={handleInputChange}
-                required
-                disabled={isSubmitting}
-              />
-            </div>
-            
-            <div className="form-group">
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                value={formData.phone}
                 onChange={handleInputChange}
                 required
                 disabled={isSubmitting}
