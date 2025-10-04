@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'https://clickexpress.ae',  // Production API base URL
+  baseURL: import.meta.env.DEV ? '' : 'https://clickexpress.ae',  // Use proxy in development, direct URL in production
   timeout: 10000, // 10 seconds timeout
   headers: {
     'Content-Type': 'application/json',
