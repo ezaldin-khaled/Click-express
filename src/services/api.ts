@@ -61,30 +61,41 @@ export const authAPI = {
   }
 }
 
-// Gallery API functions
+// Gallery API functions - matches Go backend endpoints
 export const galleryAPI = {
+  // Get all gallery images (public)
   getImages: async () => {
-    const response = await api.get('/api/gallery')
+    const response = await api.get('/api/galleries')
     return response.data
   },
   
-  uploadImage: async (imageData: { src: string; alt: string; isMain: boolean }) => {
-    const response = await api.post('/api/gallery/upload', imageData)
+  // Get all gallery images (admin)
+  getAdminImages: async () => {
+    const response = await api.get('/api/galleries/admin')
     return response.data
   },
   
+  // Get single gallery image (admin)
+  getImage: async (id: string) => {
+    const response = await api.get(`/api/galleries/admin/${id}`)
+    return response.data
+  },
+  
+  // Create new gallery image
+  uploadImage: async (imageData: { image_name: string; image_file: string }) => {
+    const response = await api.post('/api/galleries', imageData)
+    return response.data
+  },
+  
+  // Update gallery image
+  updateImage: async (id: string, data: { image_name?: string; image_file?: string }) => {
+    const response = await api.put(`/api/galleries/${id}`, data)
+    return response.data
+  },
+  
+  // Delete gallery image
   deleteImage: async (id: string) => {
-    const response = await api.delete(`/api/gallery/${id}`)
-    return response.data
-  },
-  
-  updateImage: async (id: string, data: any) => {
-    const response = await api.put(`/api/gallery/${id}`, data)
-    return response.data
-  },
-  
-  setMainImage: async (id: string) => {
-    const response = await api.put(`/api/gallery/${id}`, { isMain: true })
+    const response = await api.delete(`/api/galleries/${id}`)
     return response.data
   }
 }

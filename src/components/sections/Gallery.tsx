@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { GalleryImage } from '../../types'
+import { GalleryDisplayImage } from '../../types'
 import { galleryAPI } from '../../services/api'
 
 const Gallery: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
-  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([])
+  const [galleryImages, setGalleryImages] = useState<GalleryDisplayImage[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -14,7 +14,15 @@ const Gallery: React.FC = () => {
     const loadGalleryImages = async () => {
       try {
         const images = await galleryAPI.getImages()
-        setGalleryImages(Array.isArray(images) ? images : [])
+        // Transform backend data to frontend format
+        const transformedImages = Array.isArray(images) ? images.map(img => ({
+          id: img.id.toString(),
+          src: img.image_file,
+          alt: img.image_name,
+          isMain: false // No main image concept in backend
+        })) : []
+        
+        setGalleryImages(transformedImages)
       } catch (error) {
         console.error('Error loading gallery images:', error)
         // Fallback to hardcoded images if API fails

@@ -11,10 +11,10 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
   const [isLoading, setIsLoading] = useState(false)
   const [showAddForm, setShowAddForm] = useState(false)
   const [newImage, setNewImage] = useState({
-    src: '',
-    alt: '',
-    isMain: false
+    image_name: '',
+    image_file: ''
   })
+  const [uploadPreview, setUploadPreview] = useState<string>('')
 
   // Load gallery images on component mount
   useEffect(() => {
@@ -24,7 +24,7 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
   const loadGalleryImages = async () => {
     setIsLoading(true)
     try {
-      const images = await galleryAPI.getImages()
+      const images = await galleryAPI.getAdminImages()
       setGalleryImages(Array.isArray(images) ? images : [])
     } catch (error) {
       console.error('Error loading gallery images:', error)
@@ -35,19 +35,35 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     }
   }
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setUploadPreview(e.target?.result as string)
+        setNewImage(prev => ({ 
+          ...prev, 
+          image_name: file.name,
+          image_file: e.target?.result as string 
+        }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   const handleAddImage = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
       const imageData = {
-        src: newImage.src,
-        alt: newImage.alt,
-        isMain: newImage.isMain
+        image_name: newImage.image_name,
+        image_file: newImage.image_file
       }
       
       const createdImage = await galleryAPI.uploadImage(imageData)
       setGalleryImages(prev => Array.isArray(prev) ? [...prev, createdImage] : [createdImage])
-      setNewImage({ src: '', alt: '', isMain: false })
+      setNewImage({ image_name: '', image_file: '' })
+      setUploadPreview('')
       setShowAddForm(false)
       onNotification?.('success', 'Image added successfully')
     } catch (error) {
@@ -58,31 +74,17 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     }
   }
 
-  const handleDeleteImage = async (id: string) => {
+  const handleDeleteImage = async (id: number) => {
     if (!window.confirm('Are you sure you want to delete this image?')) return
     
     setIsLoading(true)
     try {
-      await galleryAPI.deleteImage(id)
+      await galleryAPI.deleteImage(id.toString())
       setGalleryImages(prev => Array.isArray(prev) ? prev.filter(img => img.id !== id) : [])
       onNotification?.('success', 'Image deleted successfully')
     } catch (error) {
       console.error('Error deleting image:', error)
       onNotification?.('error', 'Failed to delete image')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleSetMain = async (id: string) => {
-    setIsLoading(true)
-    try {
-      await galleryAPI.setMainImage(id)
-      setGalleryImages(prev => Array.isArray(prev) ? prev.map(img => ({ ...img, isMain: img.id === id })) : [])
-      onNotification?.('success', 'Main image updated successfully')
-    } catch (error) {
-      console.error('Error updating main image:', error)
-      onNotification?.('error', 'Failed to update main image')
     } finally {
       setIsLoading(false)
     }
@@ -104,36 +106,57 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
         <div className="admin-form">
           <form onSubmit={handleAddImage}>
             <div className="form-group">
-              <label>Image URL</label>
+              <label>Upload Image File</label>
               <input
-                type="url"
-                value={newImage.src}
-                onChange={(e) => setNewImage({...newImage, src: e.target.value})}
-                placeholder="Enter image URL"
-                required
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="file-input"
               />
+              {uploadPreview && (
+                <div className="image-preview">
+                  <img src={uploadPreview} alt="Preview" style={{maxWidth: '200px', maxHeight: '200px'}} />
+                </div>
+              )}
             </div>
+            
             <div className="form-group">
-              <label>Alt Text</label>
+              <label>Image Name</label>
               <input
                 type="text"
-                value={newImage.alt}
-                onChange={(e) => setNewImage({...newImage, alt: e.target.value})}
-                placeholder="Enter alt text"
+                value={newImage.image_name}
+                onChange={(e) => setNewImage({...newImage, image_name: e.target.value})}
+                placeholder="Enter image name"
                 required
               />
             </div>
+            
             <div className="form-group">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={newImage.isMain}
-                  onChange={(e) => setNewImage({...newImage, isMain: e.target.checked})}
-                />
-                Set as main image
-              </label>
+              <label>Or Enter Image URL</label>
+              <input
+                type="url"
+                value={newImage.image_file}
+                onChange={(e) => setNewImage({...newImage, image_file: e.target.value})}
+                placeholder="Enter image URL"
+              />
             </div>
-            <button type="submit" className="btn btn-primary">Add Image</button>
+            
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={!newImage.image_name || !newImage.image_file}>
+                {isLoading ? 'Adding...' : 'Add Image'}
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-secondary"
+                onClick={() => {
+                  setShowAddForm(false)
+                  setNewImage({ image_name: '', image_file: '' })
+                  setUploadPreview('')
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       )}
@@ -145,31 +168,41 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
         </div>
       ) : (
         <div className="gallery-grid-admin">
-          {Array.isArray(galleryImages) && galleryImages.map((image) => (
-          <div key={image.id} className={`gallery-item-admin ${image.isMain ? 'main-image' : ''}`}>
-            <img src={image.src} alt={image.alt} />
-            <div className="gallery-item-actions">
-              <span className="image-alt">{image.alt}</span>
-              {!image.isMain && (
-                <button 
-                  className="btn btn-sm btn-secondary"
-                  onClick={() => handleSetMain(image.id)}
-                >
-                  Set as Main
-                </button>
-              )}
-              {image.isMain && (
-                <span className="main-badge">Main Image</span>
-              )}
+          {Array.isArray(galleryImages) && galleryImages.length > 0 ? (
+            galleryImages.map((image) => (
+              <div key={image.id} className="gallery-item-admin">
+                <div className="gallery-item-image">
+                  <img src={image.image_file} alt={image.image_name} />
+                </div>
+                <div className="gallery-item-info">
+                  <h4>{image.image_name}</h4>
+                  <p className="image-src">{image.image_file}</p>
+                  <p className="image-date">Added: {new Date(image.created_at).toLocaleDateString()}</p>
+                </div>
+                <div className="gallery-item-actions">
+                  <button 
+                    className="btn btn-sm btn-danger"
+                    onClick={() => handleDeleteImage(image.id)}
+                    disabled={isLoading}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="empty-state">
+              <div className="empty-state-icon">🖼️</div>
+              <h3>No Gallery Images</h3>
+              <p>Add your first image to get started with the gallery.</p>
               <button 
-                className="btn btn-sm btn-danger"
-                onClick={() => handleDeleteImage(image.id)}
+                className="btn btn-primary"
+                onClick={() => setShowAddForm(true)}
               >
-                Delete
+                Add First Image
               </button>
             </div>
-          </div>
-        ))}
+          )}
         </div>
       )}
     </div>

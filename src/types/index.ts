@@ -31,6 +31,14 @@ export interface NavigationItem {
 }
 
 export interface GalleryImage {
+  id: number
+  image_name: string
+  image_file: string
+  created_at: string
+  updated_at: string
+}
+
+export interface GalleryDisplayImage {
   id: string
   src: string
   alt: string
