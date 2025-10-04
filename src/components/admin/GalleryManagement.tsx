@@ -58,15 +58,26 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
 
   const handleAddImage = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validate form data
+    if (!newImage.image_name.trim() || !newImage.image_file.trim()) {
+      onNotification?.('error', 'Please fill in all required fields')
+      return
+    }
+    
     setIsLoading(true)
     try {
       const imageData = {
-        image_name: newImage.image_name,
-        image_file: newImage.image_file
+        image_name: newImage.image_name.trim(),
+        image_file: newImage.image_file.trim()
       }
       
       const createdImage = await galleryAPI.uploadImage(imageData)
+      
+      // Add to local state
       setGalleryImages(prev => Array.isArray(prev) ? [...prev, createdImage] : [createdImage])
+      
+      // Reset form
       setNewImage({ image_name: '', image_file: '' })
       setUploadPreview('')
       setShowAddForm(false)
@@ -79,7 +90,7 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       }
     } catch (error) {
       console.error('Error adding image:', error)
-      onNotification?.('error', 'Failed to add image')
+      onNotification?.('error', 'Failed to add image. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -90,9 +101,15 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     
     setIsLoading(true)
     try {
-      await galleryAPI.deleteImage(id.toString())
+      const result = await galleryAPI.deleteImage(id.toString())
       setGalleryImages(prev => Array.isArray(prev) ? prev.filter(img => img.id !== id) : [])
-      onNotification?.('success', 'Image deleted successfully')
+      
+      // Check if deletion was handled by fallback
+      if (result.message && result.message.includes('local storage')) {
+        onNotification?.('success', 'Image deleted successfully (from local storage)')
+      } else {
+        onNotification?.('success', 'Image deleted successfully')
+      }
     } catch (error) {
       console.error('Error deleting image:', error)
       onNotification?.('error', 'Failed to delete image')
@@ -105,12 +122,21 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     <div className="admin-section">
       <div className="admin-section-header">
         <h2>Gallery Management</h2>
-        <button 
-          className="btn btn-primary"
-          onClick={() => setShowAddForm(!showAddForm)}
-        >
-          {showAddForm ? 'Cancel' : 'Add Image'}
-        </button>
+        <div className="header-actions">
+          <button 
+            className="btn btn-secondary"
+            onClick={loadGalleryImages}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Loading...' : 'Refresh'}
+          </button>
+          <button 
+            className="btn btn-primary"
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            {showAddForm ? 'Cancel' : 'Add Image'}
+          </button>
+        </div>
       </div>
 
       {showAddForm && (
@@ -153,7 +179,11 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
             </div>
             
             <div className="form-actions">
-              <button type="submit" className="btn btn-primary" disabled={!newImage.image_name || !newImage.image_file}>
+              <button 
+                type="submit" 
+                className="btn btn-primary" 
+                disabled={!newImage.image_name.trim() || !newImage.image_file.trim() || isLoading}
+              >
                 {isLoading ? 'Adding...' : 'Add Image'}
               </button>
               <button 
