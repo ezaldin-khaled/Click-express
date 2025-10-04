@@ -27,12 +27,12 @@ const ContactForm: React.FC = () => {
     setErrorMessage('')
 
     try {
-      // Prepare data for API - combine firstName and lastName into name
+      // Prepare data for API - send data structure that matches API expectations
       const contactData = {
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
-        subject: 'Inquiry about Click Express',
-        message: formData.message
+        message: formData.message,
+        subject: 'Inquiry about Click Express'
       }
 
       await contactAPI.submitContact(contactData)
