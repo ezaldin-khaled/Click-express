@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'http://localhost:8080',  // Use local server for now to avoid CORS issues
+  baseURL: 'https://clickexpress.ae',  // Production API base URL
   timeout: 10000, // 10 seconds timeout
   headers: {
     'Content-Type': 'application/json',
