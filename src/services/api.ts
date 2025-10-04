@@ -74,8 +74,9 @@ export const galleryAPI = {
       return response.data
     } catch (error) {
       console.warn('Gallery API failed, using fallback images:', error)
-      // Return fallback images
-      return [
+      
+      // Get default fallback images
+      const defaultImages = [
         {
           id: 1,
           image_name: 'Truck Fleet',
@@ -98,6 +99,12 @@ export const galleryAPI = {
           updated_at: new Date().toISOString()
         }
       ]
+      
+      // Get custom images from localStorage
+      const customImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
+      
+      // Combine default and custom images
+      return [...defaultImages, ...customImages]
     }
   },
   
@@ -111,8 +118,9 @@ export const galleryAPI = {
       return response.data
     } catch (error) {
       console.warn('Admin Gallery API failed, using fallback images:', error)
-      // Return fallback images for admin
-      return [
+      
+      // Get default fallback images
+      const defaultImages = [
         {
           id: 1,
           image_name: 'Truck Fleet',
@@ -135,6 +143,12 @@ export const galleryAPI = {
           updated_at: new Date().toISOString()
         }
       ]
+      
+      // Get custom images from localStorage
+      const customImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
+      
+      // Combine default and custom images
+      return [...defaultImages, ...customImages]
     }
   },
   

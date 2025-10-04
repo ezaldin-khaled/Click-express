@@ -79,13 +79,13 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       
       const createdImage = await galleryAPI.uploadImage(imageData)
       
-      // Add to local state
-      setGalleryImages(prev => Array.isArray(prev) ? [...prev, createdImage] : [createdImage])
-      
       // Reset form
       setNewImage({ image_name: '', image_file: '' })
       setUploadPreview('')
       setShowAddForm(false)
+      
+      // Reload gallery images to show the new image
+      await loadGalleryImages()
       
       // Check if image was stored locally (fallback)
       if (createdImage.id > 1000000000000) { // Timestamp-based ID indicates localStorage
@@ -107,7 +107,9 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     setIsLoading(true)
     try {
       const result = await galleryAPI.deleteImage(id.toString())
-      setGalleryImages(prev => Array.isArray(prev) ? prev.filter(img => img.id !== id) : [])
+      
+      // Reload gallery images to reflect the deletion
+      await loadGalleryImages()
       
       // Check if deletion was handled by fallback
       if (result.message && result.message.includes('local storage')) {
