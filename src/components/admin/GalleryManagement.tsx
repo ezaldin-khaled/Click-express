@@ -215,7 +215,6 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
                 </div>
                 <div className="gallery-item-info">
                   <h4>{image.image_name}</h4>
-                  <p className="image-src">{image.image_file}</p>
                   <p className="image-date">Added: {new Date(image.created_at).toLocaleDateString()}</p>
                 </div>
                 <div className="gallery-item-actions">
