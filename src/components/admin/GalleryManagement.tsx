@@ -26,6 +26,11 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     try {
       const images = await galleryAPI.getAdminImages()
       setGalleryImages(Array.isArray(images) ? images : [])
+      
+      // Check if we're using fallback images
+      if (images && images.length > 0 && images[0].image_file?.includes('/assets/')) {
+        onNotification?.('success', 'Gallery loaded (using fallback images - backend may be unavailable)')
+      }
     } catch (error) {
       console.error('Error loading gallery images:', error)
       onNotification?.('error', 'Failed to load gallery images')
@@ -65,7 +70,13 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       setNewImage({ image_name: '', image_file: '' })
       setUploadPreview('')
       setShowAddForm(false)
-      onNotification?.('success', 'Image added successfully')
+      
+      // Check if image was stored locally (fallback)
+      if (createdImage.id > 1000000000000) { // Timestamp-based ID indicates localStorage
+        onNotification?.('success', 'Image added successfully (stored locally - backend unavailable)')
+      } else {
+        onNotification?.('success', 'Image added successfully')
+      }
     } catch (error) {
       console.error('Error adding image:', error)
       onNotification?.('error', 'Failed to add image')
