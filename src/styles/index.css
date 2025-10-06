@@ -2568,3 +2568,252 @@ html {
         font-size: 1rem;
     }
 }
+
+/* FAQs Page Styles */
+.faqs-page {
+    padding: 2rem 0;
+    background: white;
+    min-height: 100vh;
+}
+
+.faqs-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.faqs-content h1 {
+    font-size: 2.5rem;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.language-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+.lang-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #3b82f6;
+    background: white;
+    color: #3b82f6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.lang-btn.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.lang-btn:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.faqs-section {
+    margin-bottom: 3rem;
+}
+
+.faqs-section h2 {
+    font-size: 1.8rem;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #3b82f6;
+    font-weight: 600;
+}
+
+.faq-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #3b82f6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.faq-item h3 {
+    font-size: 1.2rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.faq-item p {
+    color: #6b7280;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.faqs-section {
+    display: none;
+}
+
+.faqs-section.show {
+    display: block;
+}
+
+
+/* Terms & Conditions Page Styles */
+.terms-page {
+    padding: 2rem 0;
+    background: white;
+    min-height: 100vh;
+}
+
+.terms-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.terms-content h1 {
+    font-size: 2.5rem;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.terms-section {
+    display: none;
+}
+
+.terms-section.show {
+    display: block;
+}
+
+.terms-item {
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #3b82f6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.terms-item h3 {
+    font-size: 1.4rem;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.terms-item p {
+    color: #6b7280;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.terms-item ul {
+    color: #6b7280;
+    line-height: 1.7;
+    font-size: 1rem;
+    padding-left: 1.5rem;
+}
+
+.terms-item li {
+    margin-bottom: 0.8rem;
+    list-style-type: disc;
+}
+
+.terms-item li:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Privacy Policy Page Styles */
+.privacy-page {
+    padding: 2rem 0;
+    background: white;
+    min-height: 100vh;
+}
+
+.privacy-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.privacy-content h1 {
+    font-size: 2.5rem;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.privacy-section {
+    display: none;
+}
+
+.privacy-section.show {
+    display: block;
+}
+
+.privacy-item {
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border-left: 4px solid #3b82f6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.privacy-item h3 {
+    font-size: 1.4rem;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.privacy-item p {
+    color: #6b7280;
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.privacy-item ul {
+    color: #6b7280;
+    line-height: 1.7;
+    font-size: 1rem;
+    padding-left: 1.5rem;
+}
+
+.privacy-item li {
+    margin-bottom: 0.8rem;
+    list-style-type: disc;
+}
+
+.privacy-item li:last-child {
+    margin-bottom: 0;
+}
+
+.privacy-item strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+
+/* Smooth scrolling behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Ensure scroll to top works properly */
+body {
+    scroll-behavior: smooth;
+}

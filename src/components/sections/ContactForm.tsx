@@ -59,7 +59,7 @@ const ContactForm: React.FC = () => {
       <div className="container">
         <div className="contact-form-content">
           <h2>Get in Touch</h2>
-          <p>Contact us to order our logistics services and get a personalized quote</p>
+          <p>Contact us to order our logistics services</p>
           
           <form className="contact-form-form" onSubmit={handleSubmit}>
             {/* Success Message */}

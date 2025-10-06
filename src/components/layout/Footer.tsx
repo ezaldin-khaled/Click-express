@@ -4,33 +4,15 @@ import { ContactInfo, SocialLink } from '../../types'
 
 const Footer: React.FC = () => {
   const contactInfo: ContactInfo = {
-    address: 'Level 1, 12 Sample St, Sydney NSW 2000',
-    phone: '1000 123 4567',
-    email: 'info@clickexpress.com'
+    address: 'UAE, Dubai, Umm Ramool, Marrakech Street, Lootah Building, Office 206',
+    phone: '+971503113160',
+    email: 'Info@clickexpress.ae'
   }
 
   const socialLinks: SocialLink[] = [
-    { name: 'Facebook', url: '#', icon: 'fab fa-facebook' },
-    { name: 'Instagram', url: '#', icon: 'fab fa-instagram' },
-    { name: 'Twitter', url: '#', icon: 'fab fa-twitter' },
-    { name: 'LinkedIn', url: '#', icon: 'fab fa-linkedin' },
-    { name: 'YouTube', url: '#', icon: 'fab fa-youtube' }
-  ]
-
-  const quickLinks = [
-    { label: 'FAQs', href: '#faq' },
-    { label: 'Support Center', href: '#support' },
-    { label: 'Feedback', href: '#feedback' },
-    { label: 'Resources', href: '#resources' },
-    { label: 'Community', href: '#community' }
-  ]
-
-  const companyLinks = [
-    { label: 'FAQs', href: '#faq' },
-    { label: 'Support Center', href: '#support' },
-    { label: 'Feedback', href: '#feedback' },
-    { label: 'Resources', href: '#resources' },
-    { label: 'Community', href: '#community' }
+    { name: 'Facebook', url: 'https://www.facebook.com/share/19nz8HJwpR/', icon: 'fab fa-facebook' },
+    { name: 'Instagram', url: 'https://www.instagram.com/clickexpress.dxb?igsh=bmpmdnl6dWcxcDk=', icon: 'fab fa-instagram' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/company/click-express-transport/', icon: 'fab fa-linkedin' }
   ]
 
   return (
@@ -54,37 +36,15 @@ const Footer: React.FC = () => {
               ))}
             </div>
           </div>
-          
-          <div className="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-              {quickLinks.map((link) => (
-                <li key={link.label}>
-                  <Link to={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          
-          <div className="footer-section">
-            <h4>Company</h4>
-            <ul>
-              {companyLinks.map((link) => (
-                <li key={link.label}>
-                  <Link to={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
         
         <div className="footer-bottom">
           <div className="footer-bottom-content">
             <p>&copy; 2025 CLICK EXPRESS</p>
             <div className="footer-links">
-              <Link to="#privacy">Privacy Policy</Link>
-              <Link to="#terms">Terms of Service</Link>
-              <Link to="#cookies">Cookies Settings</Link>
+              <Link to="/privacy">Privacy Policy</Link>
+              <Link to="/terms">Terms & Conditions</Link>
+              <Link to="/faq">FAQs</Link>
             </div>
           </div>
         </div>
