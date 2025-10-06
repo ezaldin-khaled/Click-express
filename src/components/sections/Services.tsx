@@ -48,7 +48,7 @@ const Services: React.FC = () => {
       title: 'Warehousing',
       description: 'Modern storage facilities in Dubai (daily or monthly) Secure spaces suitable for all cargo types Local & regional distribution support directly from our warehouses',
       category: 'Logistics',
-      image: '/assets/about.jpg',
+      image: '/assets/5 services.jpg',
       author: 'Full name',
       date: '11 Jan 2022',
       readTime: '5 min read',
