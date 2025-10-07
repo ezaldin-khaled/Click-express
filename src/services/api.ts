@@ -112,6 +112,12 @@ export const galleryAPI = {
       return response.data
     } catch (error) {
       console.warn('Gallery API failed, using fallback images:', error)
+      console.log('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        url: error.config?.url
+      })
       
       // Get default fallback images
       const defaultImages = [
@@ -156,6 +162,12 @@ export const galleryAPI = {
       return response.data
     } catch (error) {
       console.warn('Admin Gallery API failed, using fallback images:', error)
+      console.log('Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        url: error.config?.url
+      })
       
       // Get default fallback images
       const defaultImages = [
@@ -378,8 +390,51 @@ export const contactAPI = {
 // Health check function
 export const healthAPI = {
   check: async () => {
-    const response = await api.get('/health')
-    return response.data
+    try {
+      const response = await api.get('/health')
+      return response.data
+    } catch (error) {
+      console.warn('Health check failed:', error)
+      return { status: 'ERROR', error: error.message }
+    }
+  }
+}
+
+// Diagnostic function to test API endpoints
+export const diagnosticAPI = {
+  testGalleryEndpoints: async () => {
+    const results = {
+      public: null,
+      admin: null,
+      health: null
+    }
+    
+    try {
+      console.log('Testing public gallery endpoint...')
+      const publicResponse = await api.get('/api/galleries', { params: getCacheBustingParams() })
+      results.public = { success: true, data: publicResponse.data }
+    } catch (error) {
+      results.public = { success: false, error: error.message, status: error.response?.status }
+    }
+    
+    try {
+      console.log('Testing admin gallery endpoint...')
+      const adminResponse = await api.get('/api/galleries/admin', { params: getCacheBustingParams() })
+      results.admin = { success: true, data: adminResponse.data }
+    } catch (error) {
+      results.admin = { success: false, error: error.message, status: error.response?.status }
+    }
+    
+    try {
+      console.log('Testing health endpoint...')
+      const healthResponse = await api.get('/health')
+      results.health = { success: true, data: healthResponse.data }
+    } catch (error) {
+      results.health = { success: false, error: error.message, status: error.response?.status }
+    }
+    
+    console.log('API Diagnostic Results:', results)
+    return results
   }
 }
 

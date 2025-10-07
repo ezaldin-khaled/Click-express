@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { GalleryImage } from '../../types'
-import { galleryAPI } from '../../services/api'
+import { galleryAPI, diagnosticAPI } from '../../services/api'
 
 interface GalleryManagementProps {
   onNotification?: (type: 'success' | 'error', message: string) => void
@@ -19,6 +19,9 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
   // Load gallery images on component mount
   useEffect(() => {
     loadGalleryImages()
+    
+    // Run diagnostic on mount to help debug API issues
+    diagnosticAPI.testGalleryEndpoints()
   }, [])
 
   const loadGalleryImages = async () => {
