@@ -45,8 +45,8 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       const postData = {
         title: newPost.title,
         content: newPost.content,
-        image_name: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
-        image_file: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
+        image_name: newPost.hasBackgroundImage ? newPost.backgroundImage || undefined : undefined,
+        image_file: newPost.hasBackgroundImage ? newPost.backgroundImage || undefined : undefined,
         published: newPost.published
       }
       
@@ -94,8 +94,8 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       const postData = {
         title: newPost.title,
         content: newPost.content,
-        image_name: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
-        image_file: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
+        image_name: newPost.hasBackgroundImage ? newPost.backgroundImage || undefined : undefined,
+        image_file: newPost.hasBackgroundImage ? newPost.backgroundImage || undefined : undefined,
         published: newPost.published
       }
       

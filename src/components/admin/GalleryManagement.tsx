@@ -116,7 +116,7 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
         image_file: newImage.image_file.trim()
       }
       
-      const createdImage = await galleryAPI.uploadImage(imageData)
+      await galleryAPI.uploadImage(imageData)
       
       // Reset form
       setNewImage({ image_name: '', image_file: '' })
