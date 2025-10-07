@@ -14,6 +14,11 @@ api.defaults.params = {
   _t: Date.now()
 }
 
+// Helper function to get fresh cache-busting params
+const getCacheBustingParams = () => ({
+  _t: Date.now()
+})
+
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
@@ -65,6 +70,12 @@ export const authAPI = {
 const manageLocalStorageQuota = (data: any[]) => {
   try {
     localStorage.setItem('galleryImages', JSON.stringify(data))
+    // Trigger storage event for cross-tab synchronization
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'galleryImages',
+      newValue: JSON.stringify(data),
+      oldValue: localStorage.getItem('galleryImages')
+    }))
     return true
   } catch (quotaError) {
     console.warn('localStorage quota exceeded, clearing old images:', quotaError)
@@ -72,6 +83,12 @@ const manageLocalStorageQuota = (data: any[]) => {
     const recentImages = data.slice(-10) // Keep only last 10 images
     try {
       localStorage.setItem('galleryImages', JSON.stringify(recentImages))
+      // Trigger storage event for cross-tab synchronization
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'galleryImages',
+        newValue: JSON.stringify(recentImages),
+        oldValue: localStorage.getItem('galleryImages')
+      }))
       return true
     } catch (secondError) {
       console.error('Failed to save even reduced data:', secondError)
@@ -87,7 +104,7 @@ export const galleryAPI = {
   // Get all gallery images (public)
   getImages: async () => {
     try {
-      const response = await api.get('/api/galleries')
+      const response = await api.get('/api/galleries', { params: getCacheBustingParams() })
       // Check if response has error
       if (response.data && response.data.error) {
         throw new Error(response.data.error)
@@ -132,7 +149,7 @@ export const galleryAPI = {
   // Get all gallery images (admin)
   getAdminImages: async () => {
     try {
-      const response = await api.get('/api/galleries/admin')
+      const response = await api.get('/api/galleries/admin', { params: getCacheBustingParams() })
       if (response.data && response.data.error) {
         throw new Error(response.data.error)
       }

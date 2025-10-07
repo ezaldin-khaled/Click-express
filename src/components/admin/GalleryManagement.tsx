@@ -40,6 +40,29 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
     }
   }
 
+  // Listen for gallery updates from other tabs/components
+  useEffect(() => {
+    const handleGalleryUpdate = () => {
+      console.log('Gallery updated via custom event, refreshing admin gallery...')
+      loadGalleryImages()
+    }
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'galleryImages') {
+        console.log('Gallery updated via storage event, refreshing admin gallery...')
+        loadGalleryImages()
+      }
+    }
+
+    window.addEventListener('galleryUpdated', handleGalleryUpdate)
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('galleryUpdated', handleGalleryUpdate)
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
@@ -87,6 +110,9 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       // Reload gallery images to show the new image
       await loadGalleryImages()
       
+      // Trigger custom event to notify other components
+      window.dispatchEvent(new CustomEvent('galleryUpdated'))
+      
       // Check if image was stored locally (fallback)
       if (createdImage.id > 1000000000000) { // Timestamp-based ID indicates localStorage
         onNotification?.('success', 'Image added successfully (stored locally - backend unavailable)')
@@ -110,6 +136,9 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       
       // Reload gallery images to reflect the deletion
       await loadGalleryImages()
+      
+      // Trigger custom event to notify other components
+      window.dispatchEvent(new CustomEvent('galleryUpdated'))
       
       // Check if deletion was handled by fallback
       if (result.message && result.message.includes('local storage')) {

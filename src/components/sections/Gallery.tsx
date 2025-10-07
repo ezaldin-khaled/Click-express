@@ -50,6 +50,28 @@ const Gallery: React.FC = () => {
     }
 
     loadGalleryImages()
+
+    // Listen for localStorage changes to refresh gallery when admin makes changes
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'galleryImages') {
+        console.log('Gallery updated, refreshing...')
+        loadGalleryImages()
+      }
+    }
+
+    // Listen for custom events (same-tab updates)
+    const handleGalleryUpdate = () => {
+      console.log('Gallery updated via custom event, refreshing...')
+      loadGalleryImages()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('galleryUpdated', handleGalleryUpdate)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('galleryUpdated', handleGalleryUpdate)
+    }
   }, [])
 
   // Auto-slide functionality
