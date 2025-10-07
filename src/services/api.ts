@@ -113,10 +113,10 @@ export const galleryAPI = {
     } catch (error) {
       console.warn('Gallery API failed, using fallback images:', error)
       console.log('Error details:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        url: error.config?.url
+        status: (error as any).response?.status,
+        statusText: (error as any).response?.statusText,
+        data: (error as any).response?.data,
+        url: (error as any).config?.url
       })
       
       // Get default fallback images
@@ -163,10 +163,10 @@ export const galleryAPI = {
     } catch (error) {
       console.warn('Admin Gallery API failed, using fallback images:', error)
       console.log('Error details:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        url: error.config?.url
+        status: (error as any).response?.status,
+        statusText: (error as any).response?.statusText,
+        data: (error as any).response?.data,
+        url: (error as any).config?.url
       })
       
       // Get default fallback images
@@ -395,7 +395,7 @@ export const healthAPI = {
       return response.data
     } catch (error) {
       console.warn('Health check failed:', error)
-      return { status: 'ERROR', error: error.message }
+      return { status: 'ERROR', error: (error as any).message }
     }
   }
 }
@@ -403,7 +403,11 @@ export const healthAPI = {
 // Diagnostic function to test API endpoints
 export const diagnosticAPI = {
   testGalleryEndpoints: async () => {
-    const results = {
+    const results: {
+      public: { success: boolean; data?: any; error?: any; status?: any } | null;
+      admin: { success: boolean; data?: any; error?: any; status?: any } | null;
+      health: { success: boolean; data?: any; error?: any; status?: any } | null;
+    } = {
       public: null,
       admin: null,
       health: null
@@ -414,7 +418,7 @@ export const diagnosticAPI = {
       const publicResponse = await api.get('/api/galleries', { params: getCacheBustingParams() })
       results.public = { success: true, data: publicResponse.data }
     } catch (error) {
-      results.public = { success: false, error: error.message, status: error.response?.status }
+      results.public = { success: false, error: (error as any).message, status: (error as any).response?.status }
     }
     
     try {
@@ -422,7 +426,7 @@ export const diagnosticAPI = {
       const adminResponse = await api.get('/api/galleries/admin', { params: getCacheBustingParams() })
       results.admin = { success: true, data: adminResponse.data }
     } catch (error) {
-      results.admin = { success: false, error: error.message, status: error.response?.status }
+      results.admin = { success: false, error: (error as any).message, status: (error as any).response?.status }
     }
     
     try {
@@ -430,7 +434,7 @@ export const diagnosticAPI = {
       const healthResponse = await api.get('/health')
       results.health = { success: true, data: healthResponse.data }
     } catch (error) {
-      results.health = { success: false, error: error.message, status: error.response?.status }
+      results.health = { success: false, error: (error as any).message, status: (error as any).response?.status }
     }
     
     console.log('API Diagnostic Results:', results)
