@@ -6,6 +6,7 @@ const ContactForm: React.FC = () => {
     email: '',
     firstName: '',
     lastName: '',
+    phone: '',
     message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -31,6 +32,7 @@ const ContactForm: React.FC = () => {
       const contactData = {
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
+        phone: formData.phone,
         message: formData.message,
         subject: 'Inquiry about Click Express'
       }
@@ -43,6 +45,7 @@ const ContactForm: React.FC = () => {
         email: '',
         firstName: '',
         lastName: '',
+        phone: '',
         message: ''
       })
     } catch (error) {
@@ -111,6 +114,17 @@ const ContactForm: React.FC = () => {
                   disabled={isSubmitting}
                 />
               </div>
+            </div>
+            
+            <div className="form-group">
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone number"
+                value={formData.phone}
+                onChange={handleInputChange}
+                disabled={isSubmitting}
+              />
             </div>
             
             <div className="form-group">
