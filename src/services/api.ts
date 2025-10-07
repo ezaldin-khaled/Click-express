@@ -66,235 +66,62 @@ export const authAPI = {
   }
 }
 
-// Helper function to manage localStorage quota
-const manageLocalStorageQuota = (data: any[]) => {
-  try {
-    localStorage.setItem('galleryImages', JSON.stringify(data))
-    // Trigger storage event for cross-tab synchronization
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: 'galleryImages',
-      newValue: JSON.stringify(data),
-      oldValue: localStorage.getItem('galleryImages')
-    }))
-    return true
-  } catch (quotaError) {
-    console.warn('localStorage quota exceeded, clearing old images:', quotaError)
-    // Clear old images and keep only recent ones
-    const recentImages = data.slice(-10) // Keep only last 10 images
-    try {
-      localStorage.setItem('galleryImages', JSON.stringify(recentImages))
-      // Trigger storage event for cross-tab synchronization
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: 'galleryImages',
-        newValue: JSON.stringify(recentImages),
-        oldValue: localStorage.getItem('galleryImages')
-      }))
-      return true
-    } catch (secondError) {
-      console.error('Failed to save even reduced data:', secondError)
-      // Clear all gallery data as last resort
-      localStorage.removeItem('galleryImages')
-      return false
-    }
-  }
-}
 
-// Gallery API functions - with fallback system
+// Gallery API functions
 export const galleryAPI = {
   // Get all gallery images (public)
   getImages: async () => {
-    try {
-      const response = await api.get('/api/galleries', { params: getCacheBustingParams() })
-      // Check if response has error
-      if (response.data && response.data.error) {
-        throw new Error(response.data.error)
-      }
-      return response.data
-    } catch (error) {
-      console.warn('Gallery API failed, using fallback images:', error)
-      console.log('Error details:', {
-        status: (error as any).response?.status,
-        statusText: (error as any).response?.statusText,
-        data: (error as any).response?.data,
-        url: (error as any).config?.url
-      })
-      
-      // Get default fallback images
-      const defaultImages = [
-        {
-          id: 1,
-          image_name: 'Truck Fleet',
-          image_file: '/assets/gallery 1.jpg',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          image_name: 'Container Yard',
-          image_file: '/assets/gallery2.png',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 3,
-          image_name: 'Port Operations',
-          image_file: '/assets/gallery3.jpg',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ]
-      
-      // Get custom images from localStorage
-      const customImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
-      
-      // Combine default and custom images
-      return [...defaultImages, ...customImages]
+    const response = await api.get('/api/galleries', { params: getCacheBustingParams() })
+    // Check if response has error
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error)
     }
+    return response.data
   },
   
   // Get all gallery images (admin)
   getAdminImages: async () => {
-    try {
-      const response = await api.get('/api/galleries/admin', { params: getCacheBustingParams() })
-      if (response.data && response.data.error) {
-        throw new Error(response.data.error)
-      }
-      return response.data
-    } catch (error) {
-      console.warn('Admin Gallery API failed, using fallback images:', error)
-      console.log('Error details:', {
-        status: (error as any).response?.status,
-        statusText: (error as any).response?.statusText,
-        data: (error as any).response?.data,
-        url: (error as any).config?.url
-      })
-      
-      // Get default fallback images
-      const defaultImages = [
-        {
-          id: 1,
-          image_name: 'Truck Fleet',
-          image_file: '/assets/gallery 1.jpg',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          image_name: 'Container Yard',
-          image_file: '/assets/gallery2.png',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 3,
-          image_name: 'Port Operations',
-          image_file: '/assets/gallery3.jpg',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      ]
-      
-      // Get custom images from localStorage
-      const customImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
-      
-      // Combine default and custom images
-      return [...defaultImages, ...customImages]
+    const response = await api.get('/api/galleries/admin', { params: getCacheBustingParams() })
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error)
     }
+    return response.data
   },
   
   // Get single gallery image (admin)
   getImage: async (id: string) => {
-    try {
-      const response = await api.get(`/api/galleries/admin/${id}`)
-      if (response.data && response.data.error) {
-        throw new Error(response.data.error)
-      }
-      return response.data
-    } catch (error) {
-      console.warn('Get single gallery image failed:', error)
-      throw error
+    const response = await api.get(`/api/galleries/admin/${id}`)
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error)
     }
+    return response.data
   },
   
   // Create new gallery image
   uploadImage: async (imageData: { image_name: string; image_file: string }) => {
-    try {
-      const response = await api.post('/api/galleries', imageData)
-      if (response.data && response.data.error) {
-        throw new Error(response.data.error)
-      }
-      return response.data
-    } catch (error) {
-      console.warn('Upload image failed, using local storage fallback:', error)
-      
-      try {
-        // Fallback to localStorage
-        const newImage = {
-          id: Date.now(),
-          ...imageData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-        
-        // Get existing images and add new one
-        const existingImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
-        const updatedImages = [...existingImages, newImage]
-        
-        // Try to save to localStorage with quota handling
-        manageLocalStorageQuota(updatedImages)
-        
-        return newImage
-      } catch (fallbackError) {
-        console.error('Fallback storage failed:', fallbackError)
-        // Return image without persistence if all storage fails
-        return {
-          id: Date.now(),
-          ...imageData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      }
+    const response = await api.post('/api/galleries', imageData)
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error)
     }
+    return response.data
   },
   
   // Update gallery image
   updateImage: async (id: string, data: { image_name?: string; image_file?: string }) => {
-    try {
-      const response = await api.put(`/api/galleries/${id}`, data)
-      if (response.data && response.data.error) {
-        throw new Error(response.data.error)
-      }
-      return response.data
-    } catch (error) {
-      console.warn('Update image failed, using local storage fallback:', error)
-      // Fallback to localStorage
-      const existingImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
-      const updatedImages = existingImages.map((img: any) => 
-        img.id === parseInt(id) ? { ...img, ...data, updated_at: new Date().toISOString() } : img
-      )
-      manageLocalStorageQuota(updatedImages)
-      
-      return { message: 'Image updated successfully (local storage)' }
+    const response = await api.put(`/api/galleries/${id}`, data)
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error)
     }
+    return response.data
   },
   
   // Delete gallery image
   deleteImage: async (id: string) => {
-    try {
-      const response = await api.delete(`/api/galleries/${id}`)
-      if (response.data && response.data.error) {
-        throw new Error(response.data.error)
-      }
-      return response.data
-    } catch (error) {
-      console.warn('Delete image failed, using local storage fallback:', error)
-      // Fallback to localStorage
-      const existingImages = JSON.parse(localStorage.getItem('galleryImages') || '[]')
-      const updatedImages = existingImages.filter((img: any) => img.id !== parseInt(id))
-      manageLocalStorageQuota(updatedImages)
-      
-      return { message: 'Image deleted successfully (local storage)' }
+    const response = await api.delete(`/api/galleries/${id}`)
+    if (response.data && response.data.error) {
+      throw new Error(response.data.error)
     }
+    return response.data
   }
 }
 
