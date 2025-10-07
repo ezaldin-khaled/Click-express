@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import BlogCard from '../components/ui/BlogCard'
+import BlogModal from '../components/ui/BlogModal'
 import { BlogPost } from '../types'
 import { blogAPI } from '../services/api'
 
 const Blogs: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Load blog posts from API
   useEffect(() => {
@@ -41,6 +44,16 @@ const Blogs: React.FC = () => {
 
     loadBlogPosts()
   }, [])
+
+  const handleReadMore = (post: BlogPost) => {
+    setSelectedPost(post)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedPost(null)
+  }
 
   if (isLoading) {
     return (
@@ -78,10 +91,27 @@ const Blogs: React.FC = () => {
               title={post.title}
               content={post.content}
               hasBackgroundImage={post.hasBackgroundImage}
+              backgroundImage={post.backgroundImage}
+              createdAt={post.createdAt}
+              updatedAt={post.updatedAt}
+              onReadMore={() => handleReadMore(post)}
             />
           ))}
         </div>
       </div>
+      
+      {selectedPost && (
+        <BlogModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title={selectedPost.title}
+          content={selectedPost.content}
+          hasBackgroundImage={selectedPost.hasBackgroundImage}
+          backgroundImage={selectedPost.backgroundImage}
+          createdAt={selectedPost.createdAt}
+          updatedAt={selectedPost.updatedAt}
+        />
+      )}
     </div>
   )
 }

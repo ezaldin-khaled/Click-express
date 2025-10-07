@@ -5,13 +5,19 @@ interface BlogCardProps {
   content: string
   hasBackgroundImage?: boolean
   backgroundImage?: string
+  createdAt?: string
+  updatedAt?: string
+  onReadMore?: () => void
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ 
   title, 
   content, 
   hasBackgroundImage = false, 
-  backgroundImage 
+  backgroundImage,
+  createdAt,
+  updatedAt,
+  onReadMore
 }) => {
   return (
     <div className={`blog-card ${hasBackgroundImage ? 'blog-card--with-bg' : ''}`}>
@@ -28,7 +34,12 @@ const BlogCard: React.FC<BlogCardProps> = ({
             <p key={index}>{paragraph}</p>
           ))}
         </div>
-        <a href="#" className="blog-card__read-more">Read more &gt;</a>
+        <button 
+          className="blog-card__read-more" 
+          onClick={onReadMore}
+        >
+          Read more &gt;
+        </button>
       </div>
     </div>
   )
