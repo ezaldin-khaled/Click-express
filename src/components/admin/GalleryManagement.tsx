@@ -66,6 +66,22 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Check file size (5MB limit)
+      const maxSize = 5 * 1024 * 1024 // 5MB in bytes
+      if (file.size > maxSize) {
+        onNotification?.('error', 'File size too large. Please select an image smaller than 5MB.')
+        e.target.value = '' // Clear the input
+        return
+      }
+      
+      // Check file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+      if (!allowedTypes.includes(file.type)) {
+        onNotification?.('error', 'Invalid file type. Please select a JPEG, PNG, or WebP image.')
+        e.target.value = '' // Clear the input
+        return
+      }
+      
       const reader = new FileReader()
       reader.onload = (e) => {
         setUploadPreview(e.target?.result as string)
@@ -113,15 +129,20 @@ const GalleryManagement: React.FC<GalleryManagementProps> = ({ onNotification })
       // Trigger custom event to notify other components
       window.dispatchEvent(new CustomEvent('galleryUpdated'))
       
-      // Check if image was stored locally (fallback)
-      if (createdImage.id > 1000000000000) { // Timestamp-based ID indicates localStorage
-        onNotification?.('success', 'Image added successfully (stored locally - backend unavailable)')
-      } else {
-        onNotification?.('success', 'Image added successfully')
-      }
+      onNotification?.('success', 'Image added successfully')
     } catch (error) {
       console.error('Error adding image:', error)
-      onNotification?.('error', 'Failed to add image. Please try again.')
+      
+      // Handle specific error types
+      if ((error as any).response?.status === 413) {
+        onNotification?.('error', 'Image file is too large. Please select a smaller image (under 5MB).')
+      } else if ((error as any).response?.status === 400) {
+        onNotification?.('error', 'Invalid image format. Please select a valid image file.')
+      } else if ((error as any).response?.status >= 500) {
+        onNotification?.('error', 'Server error. Please try again later.')
+      } else {
+        onNotification?.('error', 'Failed to add image. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }

@@ -45,8 +45,8 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       const postData = {
         title: newPost.title,
         content: newPost.content,
-        image_name: newPost.backgroundImage || undefined,
-        image_file: newPost.backgroundImage || undefined,
+        image_name: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
+        image_file: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
         published: newPost.published
       }
       
@@ -57,7 +57,17 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       onNotification?.('success', 'Blog post created successfully')
     } catch (error) {
       console.error('Error creating blog post:', error)
-      onNotification?.('error', 'Failed to create blog post')
+      
+      // Handle specific error types
+      if ((error as any).response?.status === 413) {
+        onNotification?.('error', 'Blog post data is too large. Please reduce content size.')
+      } else if ((error as any).response?.status === 400) {
+        onNotification?.('error', 'Invalid blog post data. Please check your input.')
+      } else if ((error as any).response?.status >= 500) {
+        onNotification?.('error', 'Server error. Please try again later.')
+      } else {
+        onNotification?.('error', `Failed to create blog post: ${(error as any).message || 'Unknown error'}`)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -84,8 +94,8 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       const postData = {
         title: newPost.title,
         content: newPost.content,
-        image_name: newPost.backgroundImage || undefined,
-        image_file: newPost.backgroundImage || undefined,
+        image_name: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
+        image_file: newPost.hasBackgroundImage ? newPost.backgroundImage || null : null,
         published: newPost.published
       }
       
@@ -97,7 +107,17 @@ const BlogManagement: React.FC<BlogManagementProps> = ({ onNotification }) => {
       onNotification?.('success', 'Blog post updated successfully')
     } catch (error) {
       console.error('Error updating blog post:', error)
-      onNotification?.('error', 'Failed to update blog post')
+      
+      // Handle specific error types
+      if ((error as any).response?.status === 413) {
+        onNotification?.('error', 'Blog post data is too large. Please reduce content size.')
+      } else if ((error as any).response?.status === 400) {
+        onNotification?.('error', 'Invalid blog post data. Please check your input.')
+      } else if ((error as any).response?.status >= 500) {
+        onNotification?.('error', 'Server error. Please try again later.')
+      } else {
+        onNotification?.('error', `Failed to update blog post: ${(error as any).message || 'Unknown error'}`)
+      }
     } finally {
       setIsLoading(false)
     }
