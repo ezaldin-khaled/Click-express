@@ -12,11 +12,12 @@ const Footer: React.FC = () => {
   const socialLinks: SocialLink[] = [
     { name: 'Facebook', url: 'https://www.facebook.com/share/19nz8HJwpR/', icon: 'fab fa-facebook' },
     { name: 'Instagram', url: 'https://www.instagram.com/clickexpress.dxb?igsh=bmpmdnl6dWcxcDk=', icon: 'fab fa-instagram' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/company/click-express-transport/', icon: 'fab fa-linkedin' }
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/company/click-express-transport/', icon: 'fab fa-linkedin' },
+    { name: 'WhatsApp', url: 'https://wa.me/971503113160', icon: 'fab fa-whatsapp' }
   ]
 
   return (
-    <footer className="footer">
+    <footer className="footer" id="footer">
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">

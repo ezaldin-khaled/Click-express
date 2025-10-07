@@ -2817,3 +2817,220 @@ html {
 body {
     scroll-behavior: smooth;
 }
+
+
+/* Service-specific content styling */
+.service-specific-content {
+    margin-bottom: 1.5rem;
+}
+
+.service-specific-content h4 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.trailer-types {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.trailer-types li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.trailer-types li:last-child {
+    border-bottom: none;
+}
+
+.trailer-types li i {
+    color: #3b82f6;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.trailer-types li strong {
+    color: #1f2937;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+
+/* Air freight services styling */
+.air-freight-services {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.air-freight-services li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.air-freight-services li:last-child {
+    border-bottom: none;
+}
+
+.air-freight-services li i {
+    color: #3b82f6;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.air-freight-services li strong {
+    color: #1f2937;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+
+/* Sea freight services styling */
+.container-options {
+    margin-bottom: 1rem;
+}
+
+.container-options h5 {
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.container-types {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+
+.container-types li {
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.container-types li:last-child {
+    border-bottom: none;
+}
+
+.container-types li i {
+    color: #3b82f6;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.container-types li strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.sea-freight-services {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sea-freight-services li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.sea-freight-services li:last-child {
+    border-bottom: none;
+}
+
+.sea-freight-services li i {
+    color: #3b82f6;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.sea-freight-services li strong {
+    color: #1f2937;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+
+/* Air charter advantages styling */
+.air-charter-advantages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.air-charter-advantages li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.air-charter-advantages li:last-child {
+    border-bottom: none;
+}
+
+.air-charter-advantages li i {
+    color: #3b82f6;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.air-charter-advantages li strong {
+    color: #1f2937;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+
+/* Warehousing features styling */
+.warehousing-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.warehousing-features li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.warehousing-features li:last-child {
+    border-bottom: none;
+}
+
+.warehousing-features li i {
+    color: #3b82f6;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.warehousing-features li strong {
+    color: #1f2937;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
