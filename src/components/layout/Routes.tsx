@@ -21,9 +21,7 @@ const Routes: React.FC = () => {
       <Route path="/admin/login" element={<Login />} />
       <Route path="/admin/dashboard" element={
         <ProtectedRoute>
-          <Layout>
-            <AdminDashboard />
-          </Layout>
+          <AdminDashboard />
         </ProtectedRoute>
       } />
     </ReactRoutes>
