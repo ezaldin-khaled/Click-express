@@ -15,8 +15,6 @@ const BlogCard: React.FC<BlogCardProps> = ({
   content, 
   hasBackgroundImage = false, 
   backgroundImage,
-  createdAt,
-  updatedAt,
   onReadMore
 }) => {
   return (
