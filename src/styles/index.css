@@ -2807,10 +2807,6 @@ html {
 }
 
 .faqs-section {
-    display: none;
-}
-
-.faqs-section.show {
     display: block;
 }
 
@@ -2837,10 +2833,6 @@ html {
 }
 
 .terms-section {
-    display: none;
-}
-
-.terms-section.show {
     display: block;
 }
 
@@ -2907,10 +2899,6 @@ html {
 }
 
 .privacy-section {
-    display: none;
-}
-
-.privacy-section.show {
     display: block;
 }
 

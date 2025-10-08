@@ -1,95 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 const Terms: React.FC = () => {
-  const [activeLanguage, setActiveLanguage] = useState('arabic')
-
-  const toggleLanguage = (lang: string) => {
-    setActiveLanguage(lang)
-  }
-
   return (
     <div className="terms-page">
       <div className="container">
         <div className="terms-content">
-          <h1>Terms & Conditions | الشروط والأحكام</h1>
-          
-          <div className="language-toggle">
-            <button 
-              className={`lang-btn ${activeLanguage === 'arabic' ? 'active' : ''}`}
-              onClick={() => toggleLanguage('arabic')}
-            >
-              العربية (Arabic)
-            </button>
-            <button 
-              className={`lang-btn ${activeLanguage === 'english' ? 'active' : ''}`}
-              onClick={() => toggleLanguage('english')}
-            >
-              English
-            </button>
-          </div>
+          <h1>Terms & Conditions</h1>
 
-          <div className={`terms-section ${activeLanguage === 'arabic' ? 'show' : ''}`}>
-            <div className="terms-item">
-              <h3>1. التعريف</h3>
-              <p>تنطبق هذه الشروط والأحكام على جميع خدمات الشحن والنقل والخدمات اللوجستية المقدمة من شركة Click Express ("الشركة") إلى عملائها ("العميل"). باستخدام خدماتنا، فإنك توافق على الالتزام بهذه الشروط والأحكام.</p>
-            </div>
-
-            <div className="terms-item">
-              <h3>2. نطاق الخدمات</h3>
-              <p>تقدم شركة Click Express خدمات الشحن البري، البحري، الجوي، تأجير الطائرات (Air Charter)، وخدمات التخزين، بالإضافة إلى حلول لوجستية متكاملة تشمل التخليص الجمركي، النقل من الباب إلى الباب، وخدمات التتبع والتأمين على الشحنات.</p>
-            </div>
-
-            <div className="terms-item">
-              <h3>3. مسؤوليات العميل</h3>
-              <ul>
-                <li>على العميل تزويد الشركة بكافة المعلومات الدقيقة المتعلقة بالشحنة، بما في ذلك نوع البضائع، الوزن، الأبعاد، الوجهة، والمستندات المطلوبة.</li>
-                <li>يتحمل العميل مسؤولية الامتثال لجميع القوانين الجمركية والتنظيمية في بلد المنشأ والوجهة.</li>
-                <li>يجب التأكد من أن البضائع المرسلة معبأة ومؤمنة بشكل صحيح لتجنب أي تلف أثناء النقل.</li>
-                <li>يتحمل العميل جميع الرسوم الجمركية، الضرائب، والغرامات إن وُجدت، ما لم يتم الاتفاق كتابيًا على خلاف ذلك.</li>
-              </ul>
-            </div>
-
-            <div className="terms-item">
-              <h3>4. مسؤوليات الشركة</h3>
-              <ul>
-                <li>تلتزم شركة Click Express ببذل أقصى جهد لضمان سلامة الشحنة ووصولها في الوقت المحدد.</li>
-                <li>لا تتحمل الشركة أي مسؤولية عن تأخير أو ضرر ناتج عن ظروف خارجة عن إرادتها مثل الحروب، الكوارث الطبيعية، الحوادث، أو الإجراءات الحكومية.</li>
-                <li>لا تعتبر الشركة مسؤولة عن الخسائر غير المباشرة أو الأضرار الناتجة عن التأخير أو فقدان الأرباح.</li>
-                <li>تحتفظ الشركة بحقها في رفض أو إيقاف أي شحنة إذا كانت تحتوي على مواد محظورة أو خطرة دون تصريح مناسب.</li>
-              </ul>
-            </div>
-
-            <div className="terms-item">
-              <h3>5. التأمين</h3>
-              <p>توصي الشركة جميع العملاء بالحصول على تأمين شحن شامل لتغطية أي خسارة أو ضرر محتمل أثناء النقل. يتم التأمين فقط بناءً على طلب مسبق من العميل وباتفاق منفصل.</p>
-            </div>
-
-            <div className="terms-item">
-              <h3>6. الدفع</h3>
-              <ul>
-                <li>يتم تحديد الأسعار والرسوم بناءً على نوع الخدمة والوجهة وطبيعة البضائع.</li>
-                <li>يجب سداد جميع المبالغ المستحقة قبل تسليم الشحنة أو عند استلام بوليصة الشحن ما لم يُتفق على غير ذلك كتابيًا.</li>
-                <li>في حال التأخير في الدفع، يحق للشركة احتجاز الشحنة أو فرض رسوم إضافية.</li>
-              </ul>
-            </div>
-
-            <div className="terms-item">
-              <h3>7. المواد المحظورة</h3>
-              <p>يحظر شحن المواد التالية: الأسلحة والذخائر دون تصاريح، المواد القابلة للاشتعال أو الانفجار، المواد السامة، النقود، المجوهرات الثمينة، أو أي بضائع مخالفة للقوانين المحلية أو الدولية.</p>
-            </div>
-
-            <div className="terms-item">
-              <h3>8. القوانين المعمول بها</h3>
-              <p>تخضع هذه الشروط والأحكام وتُفسَّر وفقًا لقوانين دولة الإمارات العربية المتحدة، وتكون محاكم دبي هي الجهة المختصة في حال نشوء أي نزاع.</p>
-            </div>
-
-            <div className="terms-item">
-              <h3>9. التعديلات</h3>
-              <p>تحتفظ شركة Click Express بالحق في تعديل هذه الشروط والأحكام في أي وقت، وتصبح سارية فور نشرها على موقع الشركة الإلكتروني.</p>
-            </div>
-          </div>
-
-          <div className={`terms-section english-content ${activeLanguage === 'english' ? 'show' : ''}`}>
+          <div className="terms-section">
             <div className="terms-item">
               <h3>1. Definition</h3>
               <p>These Terms & Conditions apply to all logistics and shipping services provided by Click Express ("the Company") to its customers ("the Client"). By using our services, you agree to comply with these terms.</p>
