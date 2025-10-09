@@ -4,7 +4,6 @@ import { useAuth } from '../contexts/AuthContext'
 import { authAPI } from '../services/api'
 import GalleryManagement from '../components/admin/GalleryManagement'
 import BlogManagement from '../components/admin/BlogManagement'
-import EmailManagement from '../components/admin/EmailManagement'
 import ContactManagement from '../components/admin/ContactManagement'
 
 const AdminDashboard: React.FC = () => {
@@ -45,7 +44,6 @@ const AdminDashboard: React.FC = () => {
   const tabs = [
     { id: 'gallery', label: 'Gallery', icon: '🖼️' },
     { id: 'blogs', label: 'Blogs', icon: '📝' },
-    { id: 'emails', label: 'Email Subscribers', icon: '📧' },
     { id: 'contacts', label: 'Contact Forms', icon: '📞' }
   ]
 
@@ -55,8 +53,6 @@ const AdminDashboard: React.FC = () => {
         return <GalleryManagement onNotification={showNotification} />
       case 'blogs':
         return <BlogManagement onNotification={showNotification} />
-      case 'emails':
-        return <EmailManagement onNotification={showNotification} />
       case 'contacts':
         return <ContactManagement onNotification={showNotification} />
       default:
