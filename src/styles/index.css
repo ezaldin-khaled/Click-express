@@ -729,6 +729,7 @@ body {
     gap: 0.5rem;
     margin-bottom: 0.5rem;
     color: #4b5563;
+    white-space: nowrap;
 }
 
 .contact-info i {

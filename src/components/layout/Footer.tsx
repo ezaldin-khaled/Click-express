@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
             </div>
             <div className="social-links">
               {socialLinks.map((social) => (
-                <a key={social.name} href={social.url}>
+                <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer">
                   <i className={social.icon}></i>
                 </a>
               ))}

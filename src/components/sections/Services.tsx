@@ -119,11 +119,11 @@ const Services: React.FC = () => {
                       <div className="service-specific-content">
                         <h4>Available Trailer Types:</h4>
                         <ul className="trailer-types">
-                          <li><i className="fas fa-truck"></i> <strong>Box Trailer</strong> – 12.5m</li>
-                          <li><i className="fas fa-truck"></i> <strong>Flat Trailer</strong> – 12–21m</li>
-                          <li><i className="fas fa-truck"></i> <strong>Lowbed Trailers</strong> – for heavy equipment and projects</li>
-                          <li><i className="fas fa-truck"></i> <strong>Refrigerated Trailers</strong> – for perishable goods (food, pharma)</li>
-                          <li><i className="fas fa-truck"></i> <strong>Car Carriers</strong> – transport up to 8 vehicles</li>
+                          <li><strong>Box Trailer</strong> – 12.5m</li>
+                          <li><strong>Flat Trailer</strong> – 12–21m</li>
+                          <li><strong>Lowbed Trailers</strong> – for heavy equipment and projects</li>
+                          <li><strong>Refrigerated Trailers</strong> – for perishable goods (food, pharma)</li>
+                          <li><strong>Car Carriers</strong> – transport up to 8 vehicles</li>
                         </ul>
                       </div>
                     )}
@@ -132,10 +132,10 @@ const Services: React.FC = () => {
                       <div className="service-specific-content">
                         <h4>Air Freight Services:</h4>
                         <ul className="air-freight-services">
-                          <li><i className="fas fa-plane"></i> <strong>Refrigerated air freight</strong> (Door-to-Airport) for sensitive goods</li>
-                          <li><i className="fas fa-plane"></i> <strong>General Cargo air freight</strong> (Door-to-Door)</li>
-                          <li><i className="fas fa-plane"></i> <strong>Daily flights</strong> to major airports</li>
-                          <li><i className="fas fa-plane"></i> <strong>Live electronic tracking</strong> for shipments</li>
+                          <li><strong>Refrigerated air freight</strong> (Door-to-Airport) for sensitive goods</li>
+                          <li><strong>General Cargo air freight</strong> (Door-to-Door)</li>
+                          <li><strong>Daily flights</strong> to major airports</li>
+                          <li><strong>Live electronic tracking</strong> for shipments</li>
                         </ul>
                       </div>
                     )}
@@ -146,14 +146,14 @@ const Services: React.FC = () => {
                         <div className="container-options">
                           <h5>Container Options:</h5>
                           <ul className="container-types">
-                            <li><i className="fas fa-ship"></i> <strong>20' & 40' Standard</strong></li>
-                            <li><i className="fas fa-ship"></i> <strong>40' & 45' High-Cube</strong></li>
-                            <li><i className="fas fa-ship"></i> <strong>20' & 40' Refrigerated</strong></li>
+                            <li><strong>20' & 40' Standard</strong></li>
+                            <li><strong>40' & 45' High-Cube</strong></li>
+                            <li><strong>20' & 40' Refrigerated</strong></li>
                           </ul>
                         </div>
                         <ul className="sea-freight-services">
-                          <li><i className="fas fa-ship"></i> <strong>Complete import/export logistics</strong></li>
-                          <li><i className="fas fa-ship"></i> <strong>Combined Sea + Land transport</strong> for inland destinations</li>
+                          <li><strong>Complete import/export logistics</strong></li>
+                          <li><strong>Combined Sea + Land transport</strong> for inland destinations</li>
                         </ul>
                       </div>
                     )}
@@ -166,10 +166,10 @@ const Services: React.FC = () => {
                         
                         <h4>Key Features:</h4>
                         <ul className="warehousing-features">
-                          <li><i className="fas fa-shield-alt"></i> <strong>Modern & Secure Facilities:</strong> Your assets are protected in clean, organized spaces equipped with 24/7 security systems and monitoring.</li>
-                          <li><i className="fas fa-calendar-alt"></i> <strong>Flexible Storage Plans:</strong> Choose from daily or monthly contracts to match your inventory needs, ensuring you only pay for the space and time you require.</li>
-                          <li><i className="fas fa-boxes"></i> <strong>Versatile Cargo Handling:</strong> Our facilities are equipped to handle all types of cargo, from palletized goods and bulk items to sensitive and high-value products.</li>
-                          <li><i className="fas fa-truck"></i> <strong>Integrated Distribution Support:</strong> Go from storage to delivery seamlessly. We provide comprehensive local and regional distribution services directly from our warehouse, reducing handling times and costs.</li>
+                          <li><strong>Modern & Secure Facilities:</strong> Your assets are protected in clean, organized spaces equipped with 24/7 security systems and monitoring.</li>
+                          <li><strong>Flexible Storage Plans:</strong> Choose from daily or monthly contracts to match your inventory needs, ensuring you only pay for the space and time you require.</li>
+                          <li><strong>Versatile Cargo Handling:</strong> Our facilities are equipped to handle all types of cargo, from palletized goods and bulk items to sensitive and high-value products.</li>
+                          {/* <li><strong>Integrated Distribution Support:</strong> Go from storage to delivery seamlessly. We provide comprehensive local and regional distribution services directly from our warehouse, reducing handling times and costs.</li> */}
                         </ul>
                       </div>
                     )}
@@ -178,12 +178,12 @@ const Services: React.FC = () => {
                       <div className="service-specific-content">
                         <h4>Key Advantages:</h4>
                         <ul className="air-charter-advantages">
-                          <li><i className="fas fa-plane"></i> <strong>Full flexibility</strong> in choosing departure & arrival times</li>
-                          <li><i className="fas fa-plane"></i> <strong>Direct, non-stop flights</strong> from origin to destination</li>
-                          <li><i className="fas fa-plane"></i> <strong>Ability to move oversized and heavy cargo</strong> beyond standard limits</li>
-                          <li><i className="fas fa-plane"></i> <strong>Ideal for sensitive, high-value, or time-critical goods</strong></li>
-                          <li><i className="fas fa-plane"></i> <strong>Global coverage</strong> with access to major and secondary airports</li>
-                          <li><i className="fas fa-plane"></i> <strong>Tailor-made solutions</strong> ensuring the fastest and safest delivery</li>
+                          <li><strong>Full flexibility</strong> in choosing departure & arrival times</li>
+                          <li><strong>Direct, non-stop flights</strong> from origin to destination</li>
+                          <li><strong>Ability to move oversized and heavy cargo</strong> beyond standard limits</li>
+                          <li><strong>Ideal for sensitive, high-value, or time-critical goods</strong></li>
+                          <li><strong>Global coverage</strong> with access to major and secondary airports</li>
+                          {/* <li><strong>Tailor-made solutions</strong> ensuring the fastest and safest delivery</li> */}
                         </ul>
                       </div>
                     )}
