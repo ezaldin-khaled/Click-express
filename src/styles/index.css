@@ -811,6 +811,29 @@ body {
     color: #3b82f6;
 }
 
+.footer-developed-by {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.footer-developed-by a {
+    text-decoration: none;
+    line-height: 0;
+}
+
+.footer-developed-by-logo {
+    height: 3.5rem;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .services-grid {

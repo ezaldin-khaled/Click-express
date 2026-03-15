@@ -48,6 +48,12 @@ const Footer: React.FC = () => {
               <Link to="/faq">FAQs</Link>
             </div>
           </div>
+          <div className="footer-developed-by">
+            <span>Developed by</span>
+            <a href="https://www.anthrotech.ae/" target="_blank" rel="noopener noreferrer" aria-label="Anthrotech">
+              <img src="/assets/anthrotech.png" alt="Anthrotech" className="footer-developed-by-logo" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
