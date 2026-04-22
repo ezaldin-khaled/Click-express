@@ -2,7 +2,9 @@ import axios from 'axios'
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.DEV ? '' : 'https://clickexpress.ae',  // Use proxy in development, direct URL in production
+  // Keep relative URLs by default so Docker/Nginx reverse proxy can route /api to backend.
+  // Override with VITE_API_URL when a specific API host is required.
+  baseURL: import.meta.env.VITE_API_URL ?? '',
   timeout: 10000, // 10 seconds timeout
   headers: {
     'Content-Type': 'application/json',
